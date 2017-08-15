@@ -3,6 +3,7 @@ import ExpCalc
 from fractions import Fraction
 
 def test_set_f_no():
+    print("User change Aperture value. Fixed ISO value, adjust Shutter Speed.")
     a = ExpCalc.ExpCalc(1/4000,100,2.8)
     ev = round(a.get_exposure_val(),0)
     new_ev = round(a.set_f_no(2),0)
@@ -18,6 +19,7 @@ def test_set_f_no():
         return 0
 
 def test_set_exp_time():
+    print("User change Shutter Speed value. Fixed ISO value, adjust Aperture.")
     a = ExpCalc.ExpCalc(1/4000,1600,2.8)
     ev = round(a.get_exposure_val(),0)
     new_ev = round(a.set_exp_time(1/8000),0)
@@ -33,6 +35,7 @@ def test_set_exp_time():
         return 0
 
 def test_set_iso_fixed_et():
+    print("User change ISO value. Fixed Shutter Speed value, adjust Aperture.")
     a = ExpCalc.ExpCalc(1/4000,100,1.4)
     ev = round(a.get_exposure_val(),0)
     new_ev = round(a.set_iso_fixed_et(400),0)
@@ -48,6 +51,7 @@ def test_set_iso_fixed_et():
         return 0
 
 def test_set_iso_fixed_fno():
+    print("User change ISO value. Fixed Aperture value, adjust Shutter Speed.")
     a = ExpCalc.ExpCalc(1/4000,100,1.4)
     ev = round(a.get_exposure_val(),0)
     new_ev = round(a.set_iso_fixed_fno(400),0)
@@ -98,8 +102,8 @@ def test_dofcalc():
     test_calc_dof()
 
 def main():
-    #test_expcalc()
-    test_dofcalc()
+    test_expcalc()
+    #test_dofcalc()
 
 if __name__ == '__main__':
     main()

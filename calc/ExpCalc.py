@@ -41,8 +41,8 @@ class ExpCalc:
         elif type == "exp_time":
             cur_idx = self.expt_lut.index(self.exp_time)
             new_idx = int(cur_idx-amt*3)
-            print("new_idx:", new_idx)
-            print("cur_idx:", cur_idx)
+            #print("new_idx:", new_idx)
+            #print("cur_idx:", cur_idx)
             if new_idx <0:
                 new_idx = 0
                 print("Overexposure")     
@@ -87,8 +87,8 @@ class ExpCalc:
         elif type == "exp_time":
             cur_idx = self.expt_lut.index(self.exp_time)
             new_idx = int(cur_idx+amt*3)
-            print("new_idx:", new_idx)
-            print("cur_idx:", cur_idx)
+            #print("new_idx:", new_idx)
+            #print("cur_idx:", cur_idx)
             if new_idx <0:
                 new_idx = 0
                 print("Not found")
@@ -130,10 +130,6 @@ class ExpCalc:
 # TODO: FIX ISO>100, adjust by stops. luts in 1/3 steps. 
 
     def update_f_no(self,old_ev):
-        print("oet:",self.exp_time)
-        print("oev:",old_ev)
-        print("oiso:",self.iso)
-        print("ofno:",self.f_no)
         new_ev = self.get_exposure_val()
         print("new_ev:",new_ev)
         #if self.iso != 100:
@@ -148,10 +144,12 @@ class ExpCalc:
             dec_amt = round(new_ev,0) - round(old_ev,0)
             print("dec",dec_amt)
             new_f_no = self.dec_stop("f_no",dec_amt)
+            print("New Fno:", new_f_no)
         elif new_ev < old_ev:
             inc_amt = round(old_ev,0) - round(new_ev,0)
             print("inc",inc_amt)
             new_f_no = self.inc_stop("f_no",inc_amt)
+            print("New Fno:", new_f_no)
 
         self.f_no = new_f_no
 
@@ -162,10 +160,6 @@ class ExpCalc:
         #self.exp_time = str(self.round_to_list(Fraction(exp_time).limit_denominator(), self.expt_lut))
         #self.exp_time = float(Fraction(self.round_to_list(exp_time, self.expt_lut)).limit_denominator())
         #print(Fraction(self.exp_time).limit_denominator())
-        print("oet:",self.exp_time)
-        print("oev:",old_ev)
-        print("oiso:",self.iso)
-        print("ofno:",self.f_no)
         new_ev = self.get_exposure_val()
         print("new_ev:",new_ev)
         if new_ev > old_ev:
@@ -182,10 +176,6 @@ class ExpCalc:
     def update_iso(self,old_ev):
         #iso = (2 ** (sqrt((self.f_no ** 2) / self.exp_time) - old_ev)) * 100
         #self.iso = self.round_to_list(round(iso), self.iso_lut)
-        print("oet:",self.exp_time)
-        print("oev:",old_ev)
-        print("oiso:",self.iso)
-        print("ofno:",self.f_no)
         new_ev = self.get_exposure_val()
         print("new_ev:",new_ev)
         if new_ev > old_ev:
@@ -219,7 +209,10 @@ class ExpCalc:
     #aperture priority
     def set_f_no(self,f_no):
         old_ev = self.get_exposure_val()
-
+        print("oet:",self.exp_time)
+        print("oev:",old_ev)
+        print("oiso:",self.iso)
+        print("ofno:",self.f_no)
         self.f_no = f_no
         self.update_exp_time(old_ev)
         return self.get_exposure_val()
@@ -227,19 +220,30 @@ class ExpCalc:
     #shutter priority
     def set_exp_time(self,et):
         old_ev = self.get_exposure_val()
-
+        print("oet:",self.exp_time)
+        print("oev:",old_ev)
+        print("oiso:",self.iso)
+        print("ofno:",self.f_no)
         self.exp_time = et
         self.update_f_no(old_ev)
         return self.get_exposure_val()
 
     def set_iso_fixed_et(self, iso):
         old_ev = self.get_exposure_val()
+        print("oet:",self.exp_time)
+        print("oev:",old_ev)
+        print("oiso:",self.iso)
+        print("ofno:",self.f_no)
         self.iso = iso
         self.update_f_no(old_ev)
         return self.get_exposure_val()
 
     def set_iso_fixed_fno(self,iso):
         old_ev = self.get_exposure_val()
+        print("oet:",self.exp_time)
+        print("oev:",old_ev)
+        print("oiso:",self.iso)
+        print("ofno:",self.f_no)
         self.iso = iso
         self.update_exp_time(old_ev)
         return self.get_exposure_val()
