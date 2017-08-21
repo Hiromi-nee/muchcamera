@@ -93,7 +93,7 @@ def test_calc_dof():
     print("Focal length (mm): ",fl)
     print("Circle of Confusion: ",coc)
     print("Focal dist. (m): ", f_distance)
-    nd, fd = DofCalc.calc_dof(f_no, fl, coc, f_distance)
+    hpd, nd, fd, ifs, bs = DofCalc.calc_dof(f_no, fl, coc, f_distance)
     print("Near distance sharp:",nd)
     print("Far distance sharp:",fd)
 
