@@ -49,7 +49,7 @@ def save_df(df, fname):
 
 no_est_rf = 100
 #0 = test, 1 = classify
-test_or_classify = 0
+test_or_classify = 1
 
 data_path = "/media/Kyou/FYP_DATA/flickr_dl/data/exif/exif_csv_v2/"
 #data_path = "/media/Kyou/FYP_DATA/flickr_dl/data/exif/exif_csv_v2/"

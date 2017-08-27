@@ -13,7 +13,7 @@ from skimage import io; io.use_plugin('matplotlib')
 
     
 def classify(input_file, gpu=False):
-    model_def = "~/Downloads/caffe-rc4/models/fr_8/deploy8.prototxt"
+    model_def = "/home/hiromi/Downloads/caffe-rc4/models/fr_8/deploy8.prototxt"
     pretrained_model = "/media/Kyou/FYP_DATA/snapshots/fr_style/fr_8_aug_iter_100000.caffemodel"
     pycaffe_dir = os.path.dirname(__file__)
     image_dims = [256,256]

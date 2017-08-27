@@ -22,8 +22,8 @@ class ExifRF:
         data['ExposureTime'] = data.apply(lambda row: self.eval_shutterspeed(row['ExposureTime']),axis=1)
         outcome = classifier.predict(data)
         print("Class: ", outcome )
-        outcome2 = classifier.predict_log_proba(data)
-        print("Class log prob: ",outcome2)
+        #outcome2 = classifier.predict_log_proba(data)
+        #print("Class log prob: ",outcome2)
         outcome3 = classifier.predict_proba(data)
         print("Class prob: ",outcome3)
 
