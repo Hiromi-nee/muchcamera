@@ -6,7 +6,6 @@ from sklearn.decomposition import TruncatedSVD,NMF,PCA,FactorAnalysis
 from sklearn.feature_selection import SelectFromModel,SelectPercentile,f_classif
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.externals import joblib
-from sklearn.model_selection import train_test_split
 
 class ExifRF:
     ss_pattern = re.compile("^\d/.*")
@@ -41,5 +40,5 @@ class ExifRF:
 
 if __name__ == '__main__':
     data = [["30", 22, 30,"100","0"],["1/250",5.6,200,"800","0"],["1/500",2.8, 50,"400","0"],["1/50",1.4,50,"400","0"],["1",1.4,50,"1600","-1/2"],["1/40", 2, 23, "3200", "0"],["25", 16, 23, "200", "0"]]
-    ret = ExifRF.classify("LK", data)
-    print(ret)
+    ret1, ret2 = ExifRF.classify("LK", data)
+    print(ret1 + " " + ret2)
