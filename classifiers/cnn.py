@@ -6,6 +6,7 @@ import sys
 import glob
 import time
 import re
+sys.path.insert(0, "/home/hiromi/Downloads/caffe-rc4/python")
 import caffe
 import json
 from skimage import io; io.use_plugin('matplotlib')
@@ -13,11 +14,11 @@ from skimage import io; io.use_plugin('matplotlib')
 
     
 def classify(input_file, gpu=False):
-    model_def = "/home/hiromi/Downloads/caffe-rc4/models/fr_8/deploy8.prototxt"
-    pretrained_model = "/media/Kyou/FYP_DATA/snapshots/fr_style/fr_8_aug_iter_100000.caffemodel"
-    pycaffe_dir = os.path.dirname(__file__)
+    model_def = "/home/hiromi/Downloads/caffe-rc4/models/fr_6/deploy6.prototxt"
+    pretrained_model = "/media/Kyou/FYP_DATA/snapshots/fr_style/fr_6_iter_100000.caffemodel"
+    pycaffe_dir = "/home/hiromi/Downloads/caffe-rc4/python"
     image_dims = [256,256]
-    mean = os.path.join(pycaffe_dir,'caffe/imagenet/ilsvrc_2012_mean.npy')
+    mean = np.load(os.path.join(pycaffe_dir,'caffe/imagenet/ilsvrc_2012_mean.npy'))
     channel_swap = [2,1,0]
     raw_scale = 255.0
     input_scale = None
@@ -36,7 +37,6 @@ def classify(input_file, gpu=False):
 
     #load image
     input_file = os.path.expanduser(input_file)
-    #print("Loading file: %s" % input_file)
     inputs = [caffe.io.load_image(input_file)]
 
     #load labels
@@ -52,7 +52,8 @@ def classify(input_file, gpu=False):
     #print ('prediction shape:', predictions[0].shape)
     #print ('predicted class:', predictions[0].argmax())
     output = dict(zip(labels, predictions[0]))
-    print(json.dumps(output))
+    print(output)
+    #print(json.dumps(output))
 
 def main(args):
     classify(args[1])
