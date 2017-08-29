@@ -17,5 +17,5 @@ class CNNWrap:
 
 
 if __name__ == '__main__':
-    ret = CNNWrap.classify("image.jpg")
+    ret = CNNWrap().classify("image.jpg")
     print(ret)

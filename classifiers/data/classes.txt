@@ -1,0 +1,8 @@
+0 Symmetry
+1 Shallow_DOF
+2 Duotones
+3 High_Key
+4 Motion_Blur
+5 Good_Light
+6 Vivid_Colour
+7 Low_Key
