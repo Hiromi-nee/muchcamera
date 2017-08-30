@@ -8,7 +8,7 @@ from sklearn.externals import joblib
 class ExifRF:
     ss_pattern = re.compile("^\d/.*")
     encode_cols = ["ExposureCompensation"]
-    labels_file = "/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/classifiers/data/classes.txt"
+    labels_file = "/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/classifiers/data/exif_classes.txt"
     rfclr_root_path="/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/classifiers/exif_rf_models/"
     classifier_locations = {
                     'HK':'HK_LK_RFClassifier.pkl',
@@ -56,6 +56,6 @@ if __name__ == '__main__':
         ["1/40", 2, 23, "3200", "0"],
         ["25", 16, 23, "200", "0"]
         ]
-    ret1, ret2 = ExifRF().classify("MB", [data[0]])
+    ret1, ret2 = ExifRF().classify("SD", [data[1]])
     print(ret1)
     print(ret2)

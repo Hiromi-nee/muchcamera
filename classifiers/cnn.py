@@ -40,7 +40,7 @@ def classify(input_file, gpu=False):
     inputs = [caffe.io.load_image(input_file)]
 
     #load labels
-    labels_file = "/media/Kyou/FYP_DATA/flickr_dl/data/synset_words.txt"
+    labels_file = "/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/classifiers/data/cnn_classes.txt"
     labels = np.loadtxt(labels_file, str, delimiter='\t')
 
     # Classify.

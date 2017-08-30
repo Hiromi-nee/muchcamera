@@ -1,0 +1,6 @@
+Symmetry
+Shallow_DOF
+Duotones
+High_Key
+Motion_Blur
+Low_Key
