@@ -16,12 +16,14 @@ class Recommender:
             for k, v in img._getexif().items()
             if k in PIL.ExifTags.TAGS
         }
-
-        exif[0] = str(exif_dict['ExposureTime'][0]) + "/" + str(exif_dict['ExposureTime'][1])
-        exif[1] = exif_dict['FNumber'][0]/exif_dict['FNumber'][1]
-        exif[2] = int(exif_dict['FocalLength'][0]/exif_dict['FocalLength'][1])
-        exif[3] = str(exif_dict['ISOSpeedRatings'])
-        exif[4] = str(exif_dict['ExposureBiasValue'][0]/exif_dict['ExposureBiasValue'][1])
+        try:
+            exif[0] = str(exif_dict['ExposureTime'][0]) + "/" + str(exif_dict['ExposureTime'][1])
+            exif[1] = exif_dict['FNumber'][0]/exif_dict['FNumber'][1]
+            exif[2] = int(exif_dict['FocalLength'][0]/exif_dict['FocalLength'][1])
+            exif[3] = str(exif_dict['ISOSpeedRatings'])
+            exif[4] = str(exif_dict['ExposureBiasValue'][0]/exif_dict['ExposureBiasValue'][1])
+        except Exception:
+            return [-1] # no exif
         return [exif]
 
     def rec_style(self, image_file_path):
@@ -31,18 +33,24 @@ class Recommender:
 
 
     def rec_settings(self, style, camera, exif_data=[]):
+        settings = []
         if len(exif_data) == 0:
-            return -1
+            #no exif, suggest full settings for given style
+            return -1 
         else:
             pass
+            #search style db
+            #find most similar exposure setting
+            #calc EV, make same EV
+            #return settings
 
-        pass
+        return settings
 
 
 if __name__ == '__main__':
     image_file_path = "/media/Kyou/unsorted/WIP/Photos/JP TRIP/2017 Summer/23072017/Export/_HIR3075.jpg"
-    exif = Recommender().extract_exif(image_file_path)
-    print(exif)
+    #exif = Recommender().extract_exif(image_file_path)
+    #print(exif)
 
     a, b = Recommender().rec_style(image_file_path)
     print(a)
