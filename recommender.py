@@ -36,6 +36,8 @@ class Recommender:
         settings = []
         if len(exif_data) == 0:
             #no exif, suggest full settings for given style
+            #search style db, find something with similar EV
+            #reject things like bright sun -> want to do long exposure
             return -1 
         else:
             pass
