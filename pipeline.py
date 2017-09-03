@@ -43,7 +43,6 @@ class Pipeline:
                         if eval(e_ret).decode("utf-8") != i_class[0]:
                             break
                 available_styles.extend([i_class])
-
         return available_styles, s
 
         #find most probable class
