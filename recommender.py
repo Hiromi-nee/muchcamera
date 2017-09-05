@@ -4,9 +4,19 @@ from calc.ExpCalc import ExpCalc
 from calc.DofCalc import DofCalc
 import PIL.Image
 import PIL.ExifTags
+import sqlite
 
 class Recommender:
-    
+    exif_db_path = "/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/exif_db/"
+    styles_db_path = {
+                    "SM":"exif_0.db",
+                    "SD":"exif_1.db",
+                    "DT":"exif_2.db",
+                    "HK":"exif_3.db",
+                    "MB":"exif_4.db",
+                    "LK":"exif_7.db"
+                    }
+
     def extract_exif(self, image_file_path):
         #["1/250",5.6,200,"800","0"]
         exif = ["",0,0,"",""]
@@ -31,14 +41,23 @@ class Recommender:
         a_styles, class_probs = Pipeline().execute(image_file_path, exif_data)
         return a_styles, class_probs
 
-
-    def rec_settings(self, style, camera, exif_data=[]):
-        settings = []
-        if len(exif_data) == 0:
+    def rec_settings_wo_image(self, style, camera, target_ev):
             #no exif, suggest full settings for given style
             #search style db, find something with similar EV
             #reject things like bright sun -> want to do long exposure
-            return -1 
+
+            # i want to shoot [insert style]
+            # choose EV (estimate)
+            # suggest settings
+            # take pict
+            # detect style
+            # give feedback
+        pass
+
+    def rec_settings_w_image(self, style, camera, exif_data=[]):
+        settings = []
+        if len(exif_data) == 0:
+            return [-1] 
         else:
             pass
             #search style db
@@ -47,6 +66,18 @@ class Recommender:
             #return settings
 
         return settings
+
+    def search_exif(self, style, exif_data=[], ev=100):
+        
+        if ev == 100:
+            # user choose style
+            pass
+        elif len(exif_data) != 0:
+            pass
+            # Search style db
+            # find similar exp
+            
+        pass
 
 
 if __name__ == '__main__':
