@@ -52,17 +52,18 @@ class Recommender:
             # take pict
             # detect style
             # give feedback
-            if style in self.styles_db_path:
-                conn = sqlite3.connect(self.exif_db_path + self.styles_db_path[style])
-                cur = conn.cursor()
-                cur.execute("SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE EV=:ev",{"ev":str(int(target_ev))})
-                results = cur.fetchall()
-                if len(results) == 0:
-                    return -1
-                else:
-                    return results
-            else:
+        if style in self.styles_db_path:
+            conn = sqlite3.connect(self.exif_db_path + self.styles_db_path[style])
+            cur = conn.cursor()
+            cur.execute("SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE EV=:ev",{"ev":str(int(target_ev))})
+            results = cur.fetchall()
+            if len(results) == 0:
                 return -1
+            else:
+                final_results = self.check_camera_limits(camera, results)
+                return final_results
+        else:
+            return -1
         
 
     def rec_settings_w_image(self, style, camera, exif_data=[]):
@@ -78,17 +79,24 @@ class Recommender:
 
         return settings
 
-    def search_exif(self, style, exif_data=[], ev=100):
-        
-        if ev == 100:
-            # user choose style
-            pass
-        elif len(exif_data) != 0:
-            pass
-            # Search style db
-            # find similar exp
-            
+    def sanity_check_settings(self, style, settings):
         pass
+
+    def check_camera_limits(self, camera, settings):
+        #check if settings are within camera limits
+        final_settings = []
+        for setting in settings:
+            #check exptime
+            if setting[0] > camera.max_shutter_speed or setting[0] < camera.min_shutter_speed:
+                break
+            if setting[1] > camera.max_aperture or setting[1] < camera.min_aperture:
+                break
+            #if setting[2] > camera.max_fl or setting[2] < camera.min_fl:
+            #    break
+            if setting[3] > camera.max_iso or setting[3] < camera.min_iso:
+                break
+            final_settings.extend([setting])
+        return final_settings
 
 
 if __name__ == '__main__':
@@ -99,3 +107,6 @@ if __name__ == '__main__':
     a, b = Recommender().rec_style(image_file_path)
     print(a)
     print(b)
+
+    res = Recommender().rec_settings_wo_image("SM", "lol", "10")
+    print(res)

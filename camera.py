@@ -3,8 +3,8 @@ from calc.ExpCalc import ExpCalc
 class Camera:
 
     def __init__(self, exposure, ff_fl, orig_fl, model, sensor_size, 
-        max_aperture = 16, min_aperture = 2.8, max_shutter_speed = 30, min_shutter_speed = 1/4000,
-        max_iso = 6400, min_iso = 100, multiplier=1.5):
+        max_aperture = 20, min_aperture = 2.8, max_shutter_speed = 30, min_shutter_speed = 1/4000,
+        max_iso = 6400, min_iso = 100, max_fl = 70, min_fl = 28, multiplier=1.5):
 
         self.exposure = exposure
         self.ff_focal_length = ff_fl
@@ -18,6 +18,8 @@ class Camera:
         self.min_shutter_speed = min_shutter_speed
         self.max_iso = max_iso
         self.min_iso = min_iso
+        self.max_fl = max_fl
+        self.min_fl = min_fl
 
 
     def calc_ff_focal_length(self):
