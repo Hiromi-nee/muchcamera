@@ -4,7 +4,7 @@ from calc.ExpCalc import ExpCalc
 from calc.DofCalc import DofCalc
 import PIL.Image
 import PIL.ExifTags
-import sqlite
+import sqlite3
 
 class Recommender:
     exif_db_path = "/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/exif_db/"
@@ -52,7 +52,18 @@ class Recommender:
             # take pict
             # detect style
             # give feedback
-        pass
+            if style in self.styles_db_path:
+                conn = sqlite3.connect(self.exif_db_path + self.styles_db_path[style])
+                cur = conn.cursor()
+                cur.execute("SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE EV=:ev",{"ev":str(int(target_ev))})
+                results = cur.fetchall()
+                if len(results) == 0:
+                    return -1
+                else:
+                    return results
+            else:
+                return -1
+        
 
     def rec_settings_w_image(self, style, camera, exif_data=[]):
         settings = []
