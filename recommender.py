@@ -16,6 +16,7 @@ class Recommender:
                     "MB":"exif_4.db",
                     "LK":"exif_7.db"
                     }
+ 
 
     def extract_exif(self, image_file_path):
         #["1/250",5.6,200,"800","0"]
@@ -67,21 +68,45 @@ class Recommender:
         
 
     def rec_settings_w_image(self, style, camera, exif_data=[]):
-        settings = []
+
         if len(exif_data) == 0:
-            return [-1] 
+            return -1
         else:
+            stmt_base = "SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE "
+            expo = ExpCalc(float(exif_data[0]),int(exif_data[3]),float(exif_data[1]))
+            expc = expo.get_exposure_val()
+
             try:
                 if style in self.styles_db_path:
                     conn = sqlite3.connect(self.exif_db_path + self.styles_db_path[style])
                     cur = conn.cursor()
-                    cur.execute()
+                    if style == "SM":
+                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
+                    elif style == "SD":
+                        cur.execute(stmt_base + "FNumber <= :f_no", {"f_no":"5.6"})
+                    elif style == "DT":
+                        cur.execute(stmt_base + "", {"":""})
+                    elif style == "HK":
+                        cur.execute(stmt_base + "", {"":""})
+                    elif style == "MB":
+                        cur.execute(stmt_base + "ISO=:iso AND EV=:ev", {"iso":"","ev":""})
+                    elif style == "LK":
+                        cur.execute(stmt_base + "", {"":""})
+                    
+                    results = cur.fetchall()
+                    
+                    if len(results) == 0:
+                        return -1
+                    else:
+                        final_results = self.check_camera_limits(camera, results)
+                        return final_results
+            except Exception:
+                return -1
             #search style db
             #find most similar exposure setting
             #calc EV, make same EV
             #return settings
 
-        return settings
 
     def sanity_check_settings(self, style, settings):
         pass
@@ -91,13 +116,13 @@ class Recommender:
         final_settings = []
         for setting in settings:
             #check exptime
-            if setting[0] > camera.max_shutter_speed or setting[0] < camera.min_shutter_speed:
+            if float(setting[0]) > camera.max_shutter_speed or float(setting[0]) < camera.min_shutter_speed:
                 break
-            if setting[1] > camera.max_aperture or setting[1] < camera.min_aperture:
+            if float(setting[1]) > camera.max_aperture or float(setting[1]) < camera.min_aperture:
                 break
             #if setting[2] > camera.max_fl or setting[2] < camera.min_fl:
             #    break
-            if setting[3] > camera.max_iso or setting[3] < camera.min_iso:
+            if int(setting[3]) > camera.max_iso or int(setting[3]) < camera.min_iso:
                 break
             final_settings.extend([setting])
         return final_settings
