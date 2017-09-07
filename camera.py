@@ -2,11 +2,11 @@ from calc.ExpCalc import ExpCalc
 
 class Camera:
 
-    def __init__(self, exposure, ff_fl, orig_fl, model, sensor_size, 
+    def __init__(self, ff_fl="50", orig_fl = "50", model="Nikon D750", sensor_size="FF", 
         max_aperture = 20, min_aperture = 2.8, max_shutter_speed = 30, min_shutter_speed = 1/4000,
-        max_iso = 6400, min_iso = 100, max_fl = 70, min_fl = 28, multiplier=1.5):
+        max_iso = 6400, min_iso = 100, max_fl = 70, min_fl = 28, multiplier=1):
 
-        self.exposure = exposure
+        #self.exposure = exposure
         self.ff_focal_length = ff_fl
         self.orig_focal_length = orig_fl
         self.model = model

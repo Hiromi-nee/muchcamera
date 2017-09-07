@@ -71,7 +71,11 @@ class Recommender:
         if len(exif_data) == 0:
             return [-1] 
         else:
-            pass
+            try:
+                if style in self.styles_db_path:
+                    conn = sqlite3.connect(self.exif_db_path + self.styles_db_path[style])
+                    cur = conn.cursor()
+                    cur.execute()
             #search style db
             #find most similar exposure setting
             #calc EV, make same EV
@@ -107,6 +111,6 @@ if __name__ == '__main__':
     a, b = Recommender().rec_style(image_file_path)
     print(a)
     print(b)
-
-    res = Recommender().rec_settings_wo_image("SM", "lol", "10")
+    camera = Camera()
+    res = Recommender().rec_settings_wo_image("SM", camera, "10")
     print(res)
