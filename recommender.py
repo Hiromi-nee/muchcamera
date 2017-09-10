@@ -67,13 +67,13 @@ class Recommender:
             return -1
         
 
-    def rec_settings_w_image(self, style, camera, exif_data=[]):
-
+    def rec_settings_w_image(self, style, camera, image_file_path):
+        exif_data = self.extract_exif(image_file_path)[0]
         if len(exif_data) == 0:
             return -1
         else:
             stmt_base = "SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE "
-            expo = ExpCalc(float(exif_data[0]),int(exif_data[3]),float(exif_data[1]))
+            expo = ExpCalc(eval(exif_data[0]),int(exif_data[3]),float(exif_data[1]))
             expc = expo.get_exposure_val()
 
             try:
@@ -85,13 +85,13 @@ class Recommender:
                     elif style == "SD":
                         cur.execute(stmt_base + "FNumber <= :f_no", {"f_no":"5.6"})
                     elif style == "DT":
-                        cur.execute(stmt_base + "", {"":""})
+                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
                     elif style == "HK":
-                        cur.execute(stmt_base + "", {"":""})
+                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
                     elif style == "MB":
                         cur.execute(stmt_base + "ISO=:iso AND EV=:ev", {"iso":"","ev":""})
                     elif style == "LK":
-                        cur.execute(stmt_base + "", {"":""})
+                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
                     
                     results = cur.fetchall()
                     
@@ -136,6 +136,11 @@ if __name__ == '__main__':
     a, b = Recommender().rec_style(image_file_path)
     print(a)
     print(b)
+    print("Rec settings without image.")
     camera = Camera()
     res = Recommender().rec_settings_wo_image("SM", camera, "10")
     print(res)
+
+    print("Rec settings with image.")
+    res2 = Recommender().rec_settings_w_image("SM", camera, image_file_path)
+    print(res2)
