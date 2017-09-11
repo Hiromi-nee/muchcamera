@@ -313,8 +313,8 @@ api.add_resource(UploadImage, '/upload_image')
 # RECOMMENDER ROUTES
 
 api.add_resource(RecStyle, '/recommend_style')
-api.add_resource(RecSettingsWOImage, 'recommend_settings_wo_image')
-api.add_resource(RecSettingsWImage, 'recommend_settings_w_image')
+api.add_resource(RecSettingsWOImage, '/recommend_settings_wo_image')
+api.add_resource(RecSettingsWImage, '/recommend_settings_w_image')
 
 if __name__ == '__main__':
      app.run(port='5002')
