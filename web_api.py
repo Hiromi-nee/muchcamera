@@ -17,6 +17,7 @@ UPLOAD_FOLDER = "images/"
 # EXPOSURE API
 exposures = []
 image_paths = []
+cameras = []
 
 #Fraction(new_exp_time).limit_denominator()
 
@@ -328,6 +329,50 @@ class RecSettingsWImage(Resource):
 
 # CAMERA
 
+class CameraConfig(Resource):
+    def put(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('ff_fl', help="Full Frame Focal Length")
+        parser.add_argument('orig_fl', help="Original Focal Length")
+        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('sensor_size', help="sensor size")
+        parser.add_argument('max_aperture', help="max_aperture")
+        parser.add_argument('min_aperture', help="min_aperture")
+        parser.add_argument('max_shutter_speed', help="max_shutter_speed")
+        parser.add_argument('min_shutter_speed', help="min_shutter_speed")
+        parser.add_argument('max_iso', type=int, help="max_iso")
+        parser.add_argument('min_iso', type=int, help="min_iso")
+        parser.add_argument('max_fl', type=int, help="max focal length")
+        parser.add_argument('min_fl', type=int, help="minimum focal length")
+        parser.add_argument('multiplier', help="crop factor")
+        args = parser.parse_args()
+        camera = Camera(
+            args['ff_fl'], args['orig_fl'],
+            args['model'], args['sensor_size'],
+            float(args['max_aperture']), float(args['min_aperture']),
+            float(args['max_shutter_speed']), eval(args['min_shutter_speed']),
+            args['max_iso'], args['min_iso'],
+            args['max_fl'], args['min_fl'],
+            float(args['multiplier'])
+        )
+
+        cameras.append(camera)
+
+        return jsonify({"camera_id": (len(cameras)-1)})
+
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('camera_id', type=int, help="camera_id")
+        args = parser.parse_args()
+        camera = cameras[args['camera_id']]
+        res = {}
+
+        return jsonify(res)
+
+class ListCamera(Resource):
+    def get(self):
+        pass
+
 # END CAMERA
 
 # EXPOSURE ROUTES
@@ -355,6 +400,11 @@ api.add_resource(UploadImage, '/upload_image')
 api.add_resource(RecStyle, '/recommend_style')
 api.add_resource(RecSettingsWOImage, '/recommend_settings_wo_image')
 api.add_resource(RecSettingsWImage, '/recommend_settings_w_image')
+
+# CAMERA ROUTE
+
+api.add_resource(CameraConfig, '/camera_config')
+api.add_resource(ListCamera, '/list_camera')
 
 if __name__ == '__main__':
      app.run(port='5002')
