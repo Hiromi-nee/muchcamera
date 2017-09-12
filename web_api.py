@@ -7,6 +7,7 @@ from calc.DofCalc import DofCalc
 from fractions import Fraction
 from recommender import Recommender
 import os, uuid
+from camera import Camera
 
 app = Flask(__name__)
 api = Api(app)
@@ -274,15 +275,54 @@ class Exif(Resource):
 # RECOMMENDER
 
 class RecStyle(Resource):
-    pass
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('image_id', type=int, help="Photo id")
+        args = parser.parse_args()
+        detected_styles, cnn_class_probs = Recommender().rec_style(image_paths[args['image_id']])
+        res = {
+        "detected_styles": [{i[0] : i [1]}for i in detected_styles],
+        "class_probabilities": [{i[0] : i [1]}for i in cnn_class_probs]
+        }
+        return jsonify(res)
 
 class RecSettingsWOImage(Resource):
-    pass
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('style', help="style")
+        parser.add_argument('target_ev', type=int, help="target_ev")
+        args = parser.parse_args()
+        #ff_fl="50", orig_fl = "50", model="Nikon D750", sensor_size="FF", 
+        #max_aperture = 20, min_aperture = 2.8, max_shutter_speed = 30, min_shutter_speed = 1/4000,
+        #max_iso = 6400, min_iso = 100, max_fl = 70, min_fl = 28, multiplier=1
+        camera = Camera()
+        rec_res = Recommender().rec_settings_wo_image(args['style'], camera, args['target_ev'])
+        res = {
+        "recommended_settings": [{ "ExposureTime": str(Fraction(float(i[0])).limit_denominator()), 
+                                "Aperture": i[1], 
+                                "FocalLength": i[2], 
+                                "ISO": i[3] } for i in rec_res]
+        }
+
+        return jsonify(res)
 
 
 class RecSettingsWImage(Resource):
-    pass
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('style', help="style")
+        parser.add_argument('image_id', type=int, help="image_id")
+        args = parser.parse_args()
+        camera = Camera()
+        rec_res = Recommender().rec_settings_w_image(args['style'], camera, image_paths[args['image_id']])
+        res = {
+        "recommended_settings": [{ "ExposureTime": str(Fraction(float(i[0])).limit_denominator()), 
+                                "Aperture": i[1], 
+                                "FocalLength": i[2], 
+                                "ISO": i[3] } for i in rec_res]
+        }
 
+        return jsonify(res)
 
 # END RECOMMENDER
 
