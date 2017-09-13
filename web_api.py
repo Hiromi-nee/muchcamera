@@ -140,7 +140,7 @@ class ExposureTimePriority(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('exposure_id', type=int, help="exp_id")
-            parser.add_argument('ExposureTime', help="Aperture Value.")
+            parser.add_argument('ExposureTime', help="Shutter Speed Value.")
             args = parser.parse_args()
             exp_id = args['exposure_id']
             exp_obj = exposures[exp_id]
@@ -176,7 +176,7 @@ class IsoPriority(Resource):
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('exposure_id', type=int, help="exp_id")
-            parser.add_argument('ISO', help="Aperture Value.")
+            parser.add_argument('ISO', help="ISO Value.")
             parser.add_argument('change', help="Setting to adjust. et or f_no")
             args = parser.parse_args()
             exp_id = args['exposure_id']
@@ -201,7 +201,23 @@ class IsoPriority(Resource):
 
 
 class ManualExposure(Resource):
-    pass
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('exposure_id', type=int, help="exp_id")
+        parser.add_argument('ExposureTime', help="Shutter Speed Value.")
+        parser.add_argument('Aperture', help="Aperture Value.")
+        parser.add_argument('ISO', help="ISO Value.")
+        args = parser.parse_args()
+        exp_id = args['exposure_id']
+        exp_obj = exposures[exp_id]
+        exp_obj.exp_time = eval(args['ExposureTime'])
+        exp_obj.f_no = float(args['Aperture'])
+        exp_obj.iso = int(args['ISO'])
+        exposures[exp_id] = exp_obj
+        ev = exp_obj.get_exposure_val()
+        res = {"EV": round(ev,0)}
+
+        return jsonify(res)
 
 # END EXPOSURE API
 
