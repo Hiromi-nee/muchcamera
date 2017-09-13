@@ -5,14 +5,18 @@ curl -X GET "http://127.0.0.1:5002/aperture?exposure_id=0"
 curl -XGET "http://127.0.0.1:5002/ev_by_id?exposure_id=0"
 
 # User define Aperture
-curl F "Aperture=3.5" "http://127.0.0.1:5002/aperture?exposure_id=0"
+curl -F "Aperture=3.5" "http://127.0.0.1:5002/aperture?exposure_id=0"
 
 # User define ExposureTime
-curl F "ExposureTime=1%2F2000" "http://127.0.0.1:5002/exposure_time?exposure_id=0"
+curl -F "ExposureTime=1%2F2000" "http://127.0.0.1:5002/exposure_time?exposure_id=0"
 
 # User define ISO
 curl -F "ISO=200" -F "change=et" "http://127.0.0.1:5002/iso?exposure_id=0"
 curl -F "ISO=400" -F "change=f_no" "http://127.0.0.1:5002/iso?exposure_id=0"
+
+# Manual exposure setting
+
+curl -F "ISO=200" -F "Aperture=2" -F "ExposureTime=1%2F4000" "http://127.0.0.1:5002/manual_exposure?exposure_id=0"
 
 # CALC DOF/COC
 curl -XGET "http://127.0.0.1:5002/calc_dof?Aperture=2&FocalLength=50&coc=0.030&SubjDist=5"

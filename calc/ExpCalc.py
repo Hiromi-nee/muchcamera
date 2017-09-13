@@ -97,8 +97,9 @@ class ExpCalc:
             #print("new_idx:", new_idx)
             #print("cur_idx:", cur_idx)
             if new_idx <0:
-                new_idx = 0
-                print("Exceeds Camera capabilities")
+                stops_under = 0 - new_idx
+                new_idx = cur_idx
+                print("Over limits by %d stops." % stops_under)
                 #return new_idx
             try:
                 new_exp_time = self.expt_lut[new_idx]
@@ -111,7 +112,9 @@ class ExpCalc:
             cur_idx = self.iso_lut.index(self.iso)
             new_idx = int(cur_idx-amt*3)
             if new_idx <0:
-                new_idx = 0
+                stops_under = 0 - new_idx
+                new_idx = cur_idx
+                print("Over limits by %d stops." % stops_under)
             try:
                 new_iso = self.iso_lut[new_idx]
             except Exception:
