@@ -19,7 +19,8 @@ exposures = []
 image_paths = []
 cameras = []
 
-#Fraction(new_exp_time).limit_denominator()
+# Fraction(new_exp_time).limit_denominator()
+
 
 class Exposure(Resource):
     def get(self):
@@ -275,6 +276,7 @@ class Exif(Resource):
 
 # RECOMMENDER
 
+
 class RecStyle(Resource):
     def get(self):
         parser = reqparse.RequestParser()
@@ -287,16 +289,40 @@ class RecStyle(Resource):
         }
         return jsonify(res)
 
+
 class RecSettingsWOImage(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('style', help="style")
-        parser.add_argument('target_ev', type=int, help="target_ev")
+        parser.add_argument('target_ev', help="target_ev")
+        # camera args
+        parser.add_argument('ff_fl', help="Full Frame Focal Length")
+        parser.add_argument('orig_fl', help="Original Focal Length")
+        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('sensor_size', help="sensor size")
+        parser.add_argument('max_aperture', help="max_aperture")
+        parser.add_argument('min_aperture', help="min_aperture")
+        parser.add_argument('max_shutter_speed', help="max_shutter_speed")
+        parser.add_argument('min_shutter_speed', help="min_shutter_speed")
+        parser.add_argument('max_iso', type=int, help="max_iso")
+        parser.add_argument('min_iso', type=int, help="min_iso")
+        parser.add_argument('max_fl', type=int, help="max focal length")
+        parser.add_argument('min_fl', type=int, help="minimum focal length")
+        parser.add_argument('multiplier', help="crop factor")
+        # end camera args
         args = parser.parse_args()
         #ff_fl="50", orig_fl = "50", model="Nikon D750", sensor_size="FF", 
         #max_aperture = 20, min_aperture = 2.8, max_shutter_speed = 30, min_shutter_speed = 1/4000,
         #max_iso = 6400, min_iso = 100, max_fl = 70, min_fl = 28, multiplier=1
-        camera = Camera()
+        camera = Camera(
+            args['ff_fl'], args['orig_fl'],
+            args['model'], args['sensor_size'],
+            float(args['max_aperture']), float(args['min_aperture']),
+            float(args['max_shutter_speed']), eval(args['min_shutter_speed']),
+            args['max_iso'], args['min_iso'],
+            args['max_fl'], args['min_fl'],
+            float(args['multiplier'])
+        )
         rec_res = Recommender().rec_settings_wo_image(args['style'], camera, args['target_ev'])
         res = {
         "recommended_settings": [{ "ExposureTime": str(Fraction(float(i[0])).limit_denominator()), 
@@ -313,14 +339,41 @@ class RecSettingsWImage(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('style', help="style")
         parser.add_argument('image_id', type=int, help="image_id")
+        # camera args
+        parser.add_argument('ff_fl', help="Full Frame Focal Length")
+        parser.add_argument('orig_fl', help="Original Focal Length")
+        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('sensor_size', help="sensor size")
+        parser.add_argument('max_aperture', help="max_aperture")
+        parser.add_argument('min_aperture', help="min_aperture")
+        parser.add_argument('max_shutter_speed', help="max_shutter_speed")
+        parser.add_argument('min_shutter_speed', help="min_shutter_speed")
+        parser.add_argument('max_iso', type=int, help="max_iso")
+        parser.add_argument('min_iso', type=int, help="min_iso")
+        parser.add_argument('max_fl', type=int, help="max focal length")
+        parser.add_argument('min_fl', type=int, help="minimum focal length")
+        parser.add_argument('multiplier', help="crop factor")
+        # end camera args
         args = parser.parse_args()
-        camera = Camera()
+        camera = Camera(
+            args['ff_fl'], args['orig_fl'],
+            args['model'], args['sensor_size'],
+            float(args['max_aperture']), float(args['min_aperture']),
+            float(args['max_shutter_speed']), eval(args['min_shutter_speed']),
+            args['max_iso'], args['min_iso'],
+            args['max_fl'], args['min_fl'],
+            float(args['multiplier'])
+        )
+
         rec_res = Recommender().rec_settings_w_image(args['style'], camera, image_paths[args['image_id']])
         res = {
-        "recommended_settings": [{ "ExposureTime": str(Fraction(float(i[0])).limit_denominator()), 
-                                "Aperture": i[1], 
-                                "FocalLength": i[2], 
-                                "ISO": i[3] } for i in rec_res]
+        "recommended_settings": [
+            {
+            "ExposureTime": str(Fraction(float(i[0])).limit_denominator()),
+            "Aperture": i[1],
+            "FocalLength": i[2],
+            "ISO": i[3]
+            } for i in rec_res]
         }
 
         return jsonify(res)
@@ -328,6 +381,7 @@ class RecSettingsWImage(Resource):
 # END RECOMMENDER
 
 # CAMERA
+
 
 class CameraConfig(Resource):
     def put(self):
@@ -358,7 +412,7 @@ class CameraConfig(Resource):
 
         cameras.append(camera)
 
-        return jsonify({"camera_id": (len(cameras)-1)})
+        return jsonify({"camera_id": (len(cameras) - 1)})
 
     def get(self):
         parser = reqparse.RequestParser()
@@ -376,6 +430,7 @@ class ListCamera(Resource):
 # END CAMERA
 
 # EXPOSURE ROUTES
+
 api.add_resource(Exposure, '/exposure')
 api.add_resource(ExposureValue, '/ev')
 api.add_resource(ExposureValueById, '/ev_by_id')
@@ -387,7 +442,7 @@ api.add_resource(Iso, '/iso')
 api.add_resource(CalcDOF, '/calc_dof')
 api.add_resource(CalcCOC, '/calc_coc')
 
-#EXIF ROUTES
+# EXIF ROUTES
 
 api.add_resource(Exif, '/get_exif')
 

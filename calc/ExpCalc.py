@@ -30,22 +30,26 @@ class ExpCalc:
     def inc_stop(self, type, amt):
         if type == "f_no":
             cur_idx = self.f_no_lut.index(self.f_no)
-            new_idx = int(cur_idx-amt*3)
+            new_idx = int(cur_idx - amt * 3)
+            if new_idx < 0:
+                stops_over = 
+                new_idx = 0
+                print("Over camera limits by %d stops." % stops_over)
             try:
                 new_f_no = self.f_no_lut[new_idx]
             except Exception:
-                print("Aperture out of range.")
+                print("Error incrementing aperture")
             self.f_no = new_f_no
             return new_f_no
 
         elif type == "exp_time":
             cur_idx = self.expt_lut.index(self.exp_time)
-            new_idx = int(cur_idx+amt*3)
+            new_idx = int(cur_idx + amt * 3)
             #print("new_idx:", new_idx)
             #print("cur_idx:", cur_idx)
-            if new_idx <0:
-                new_idx = 0
-                print("Overexposure")     
+            if new_idx >= len(self.expt_lut):
+                new_idx = len(self.expt_lut) - 1
+                print("Overexposure")
             try:
                 new_exp_time = self.expt_lut[new_idx]
             except Exception:
@@ -55,10 +59,10 @@ class ExpCalc:
 
         elif type == "iso":
             cur_idx = self.iso_lut.index(self.iso)
-            new_idx = int(cur_idx+amt*3)
-            if new_idx <0:
-                new_idx = 0
-                print("Overexposure") 
+            new_idx = int(cur_idx + amt * 3)
+            if new_idx >= len(self.iso_lut):
+                new_idx = len(self.iso_lut) - 1
+                print("Overexposure")
             try:
                 new_iso = self.iso_lut[new_idx]
             except Exception:
@@ -73,10 +77,11 @@ class ExpCalc:
     def dec_stop(self, type, amt):
         if type == "f_no":
             cur_idx = self.f_no_lut.index(self.f_no)
-            new_idx = int(cur_idx+amt*3)
-            if new_idx <0:
+            new_idx = int(cur_idx + amt * 3)
+            if new_idx >= len(self.f_no_lut):
+                stop_underexposed = new_idx - (len(self.f_no_lut) - 1)
                 new_idx = 0
-                print("Not found")
+                print("Over camera limits by: %d stops" % stop_underexposed)
             try:
                 new_f_no = self.f_no_lut[new_idx]
             except Exception:
