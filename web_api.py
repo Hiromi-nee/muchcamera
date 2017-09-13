@@ -87,7 +87,7 @@ class ExposureValueById(Resource):
         return jsonify({"EV":round(evs,0)})
 
 
-class Aperture(Resource):
+class AperturePriority(Resource):
     def get(self):
         try:
             parser = reqparse.RequestParser()
@@ -123,7 +123,7 @@ class Aperture(Resource):
         return jsonify(res)
 
 
-class ExposureTime(Resource):
+class ExposureTimePriority(Resource):
     def get(self):
         try:
             parser = reqparse.RequestParser()
@@ -159,7 +159,7 @@ class ExposureTime(Resource):
         return jsonify(res)
 
 
-class Iso(Resource):
+class IsoPriority(Resource):
     def get(self):
         try:
             parser = reqparse.RequestParser()
@@ -198,6 +198,10 @@ class Iso(Resource):
             print(e)
 
         return jsonify(res)
+
+
+class ManualExposure(Resource):
+    pass
 
 # END EXPOSURE API
 
@@ -434,9 +438,10 @@ class ListCamera(Resource):
 api.add_resource(Exposure, '/exposure')
 api.add_resource(ExposureValue, '/ev')
 api.add_resource(ExposureValueById, '/ev_by_id')
-api.add_resource(Aperture, '/aperture')
-api.add_resource(ExposureTime, '/exposure_time')
-api.add_resource(Iso, '/iso')
+api.add_resource(AperturePriority, '/aperture')
+api.add_resource(ExposureTimePriority, '/exposure_time')
+api.add_resource(IsoPriority, '/iso')
+api.add_resource(ManualExposure, '/manual_exposure')
 
 # DOF ROUTES
 api.add_resource(CalcDOF, '/calc_dof')

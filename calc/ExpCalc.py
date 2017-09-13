@@ -32,7 +32,7 @@ class ExpCalc:
             cur_idx = self.f_no_lut.index(self.f_no)
             new_idx = int(cur_idx - amt * 3)
             if new_idx < 0:
-                stops_over = 
+                stops_over = 0 - new_idx
                 new_idx = 0
                 print("Over camera limits by %d stops." % stops_over)
             try:
