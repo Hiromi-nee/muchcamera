@@ -5,6 +5,8 @@ from calc.DofCalc import DofCalc
 import PIL.Image
 import PIL.ExifTags
 import sqlite3
+import helper.exp_helper as exp_helper
+
 
 class Recommender:
     exif_db_path = "/media/Kyou/FYP_DATA/flickr_dl/scripts/muchcamera/exif_db/"
@@ -61,7 +63,7 @@ class Recommender:
             if len(results) == 0:
                 return -1
             else:
-                final_results = self.check_camera_limits(camera, results)
+                final_results = self.filter_for_camera_limits(camera, results)
                 return final_results
         else:
             return -1
@@ -98,7 +100,7 @@ class Recommender:
                     if len(results) == 0:
                         return -1
                     else:
-                        final_results = self.check_camera_limits(camera, results)
+                        final_results = self.filter_for_camera_limits(camera, results)
                         return final_results
             except Exception:
                 return -1
@@ -111,7 +113,7 @@ class Recommender:
     def sanity_check_settings(self, style, settings):
         pass
 
-    def check_camera_limits(self, camera, settings):
+    def filter_for_camera_limits(self, camera, settings):
         #check if settings are within camera limits
         final_settings = []
         for setting in settings:
@@ -126,6 +128,14 @@ class Recommender:
                 break
             final_settings.extend([setting])
         return final_settings
+
+    def recommend_filter(self, camera, settings, target_settings):
+        target_ev = ExpCalc(eval(target_settings[0]),float(target_settings[1]),int(target_settings[2]))
+        
+        # diff settings see which setting change
+        flags = exp_helper.diff_exposures(settings, target_settings)
+        # set to min or max of the other settings before checking if need to apply filter
+        # if need to apply filter, suggest how many stops
 
 
 if __name__ == '__main__':
