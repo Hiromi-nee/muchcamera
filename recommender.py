@@ -129,11 +129,29 @@ class Recommender:
             final_settings.extend([setting])
         return final_settings
 
+    def check_within_camera_limits(self, camera, settings):
+        pass
+
     def recommend_filter(self, camera, settings, target_settings):
-        target_ev = ExpCalc(eval(target_settings[0]),float(target_settings[1]),int(target_settings[2]))
-        
+        # exp_time, iso, f_no
+        target_exp = ExpCalc(eval(target_settings[0]),int(target_settings[1]),float(target_settings[2]))
+        current_exp = ExpCalc(eval(settings[0]),int(settings[1]),float(settings[2]))
+        no_stop_diff = current_exp.get_exposure_val() - target_exp.get_exposure_val()
         # diff settings see which setting change
-        flags = exp_helper.diff_exposures(settings, target_settings)
+        flags = exp_helper.diff_exposures(current_exp, target_exp)
+        if flags[0] == 1:
+            # exposure changed
+            # if fastest shutter speed but still overexposed -> ND Filter
+            # if slower shutter speed but still under exposed -> suggest raising ISO
+            pass
+        if flags[1] == 1:
+            # aperture changed
+            # if aperture change to smaller num but still under exposed, warn amount, suggest raising ISO
+            # if larger num -> use ND Filter
+            pass
+        if flags[2] == 1:
+            # iso changed
+            pass
         # set to min or max of the other settings before checking if need to apply filter
         # if need to apply filter, suggest how many stops
 
