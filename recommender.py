@@ -139,19 +139,35 @@ class Recommender:
         no_stop_diff = current_exp.get_exposure_val() - target_exp.get_exposure_val()
         # diff settings see which setting change
         flags = exp_helper.diff_exposures(current_exp, target_exp)
-        if flags[0] == 1:
+        if flags[0] != 0:
             # exposure changed
             # if fastest shutter speed but still overexposed -> ND Filter
             # if slower shutter speed but still under exposed -> suggest raising ISO
-            pass
-        if flags[1] == 1:
+            if flags[0] == 1:
+                if no_stop_diff > 0:
+                    # rec ND Filter
+                    pass
+                else:
+                    pass # faster shutter speed underexposed
+            else: # slower shutter speed
+                if no_stop_diff < 0:
+                    pass # raise ISO
+                else: # slower shutter speed, overexposed
+                    pass
+        if flags[1] != 0:
             # aperture changed
             # if aperture change to smaller num but still under exposed, warn amount, suggest raising ISO
             # if larger num -> use ND Filter
-            pass
-        if flags[2] == 1:
+            if flags[1] == 1:
+                pass
+            else:
+                pass
+        if flags[2] != 0:
             # iso changed
-            pass
+            if flags[2] == 1:
+                pass
+            else:
+                pass
         # set to min or max of the other settings before checking if need to apply filter
         # if need to apply filter, suggest how many stops
 
