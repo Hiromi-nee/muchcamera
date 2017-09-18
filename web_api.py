@@ -398,6 +398,10 @@ class RecSettingsWImage(Resource):
 
         return jsonify(res)
 
+class RecFilter(Resource):
+    def get(self):
+        pass
+
 # END RECOMMENDER
 
 # CAMERA
@@ -476,6 +480,7 @@ api.add_resource(UploadImage, '/upload_image')
 api.add_resource(RecStyle, '/recommend_style')
 api.add_resource(RecSettingsWOImage, '/recommend_settings_wo_image')
 api.add_resource(RecSettingsWImage, '/recommend_settings_w_image')
+api.add_resource(RecFilter, '/recommend_filter')
 
 # CAMERA ROUTE
 
