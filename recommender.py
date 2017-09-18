@@ -149,12 +149,12 @@ class Recommender:
                     # raise ISO
                     return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
                 else: # current scene darker than target scene
-                    pass # faster shutter speed underexposed
+                    return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
             else: # current faster shutter speed than target
                 if no_stop_diff < 0: # current scene darker than target scene
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff} # rec ND Filter
                 else: # current scene brighter than target scene
-                    pass
+                    return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
         if flags[1] != 0:
             # aperture changed
             # if aperture change to smaller num but still under exposed, warn amount, suggest raising ISO
