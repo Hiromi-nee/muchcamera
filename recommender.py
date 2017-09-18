@@ -145,41 +145,41 @@ class Recommender:
             # if fastest shutter speed but still overexposed -> ND Filter
             # if slower shutter speed but still under exposed -> suggest raising ISO
             if flags[0] == 1: # current slower shutter speed than target
-                if no_stop_diff > 0: # current exp faster shutter speed
+                if no_stop_diff > 0: # current scene brighter than target scene
                     # raise ISO
                     return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
-                else:
+                else: # current scene darker than target scene
                     pass # faster shutter speed underexposed
             else: # current faster shutter speed than target
-                if no_stop_diff < 0:
+                if no_stop_diff < 0: # current scene darker than target scene
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff} # rec ND Filter
-                else: # slower shutter speed, overexposed
+                else: # current scene brighter than target scene
                     pass
         if flags[1] != 0:
             # aperture changed
             # if aperture change to smaller num but still under exposed, warn amount, suggest raising ISO
             # if larger num -> use ND Filter
-            if flags[1] == 1: # target scene more light
-                if no_stop_diff > 0: # use ND filter
+            if flags[1] == 1: # current smaller aperture than target
+                if no_stop_diff > 0: # current scene brighter than target scene
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
-                else:
+                else: # target scene brighter than current scene
                     pass
-            else: # target less light
-                if no_stop_diff < 0:
+            else: # target smaller aperture than current
+                if no_stop_diff < 0: # target scene brighter than current scene
                     return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
-                else:
+                else: # current scene brighter than target scene
                     pass
         if flags[2] != 0: 
             # iso changed
             if flags[2] == 1: # target higher iso
-                if no_stop_diff < 0: # target scene brighter
+                if no_stop_diff < 0: # target scene brighter than current scene
                     return {"Action" : "Decrease Shutter Speed or Aperture", "Value (stops)" : no_stop_diff}
-                else:
+                else: # current scene brighter than target scene
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
             else: # target lower iso
-                if no_stop_diff > 0:
+                if no_stop_diff > 0: # current scene brighter than target scene
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
-                else:
+                else: # target scene brighter than current scene
                     return {"Action" : "Decrease Shutter Speed or Aperture", "Value (stops)" : no_stop_diff}
         # set to min or max of the other settings before checking if need to apply filter
         # if need to apply filter, suggest how many stops
