@@ -144,13 +144,13 @@ class Recommender:
             # exposure changed
             # if fastest shutter speed but still overexposed -> ND Filter
             # if slower shutter speed but still under exposed -> suggest raising ISO
-            if flags[0] == 1: # target has slower shutter speed
+            if flags[0] == 1: # current slower shutter speed than target
                 if no_stop_diff > 0: # current exp faster shutter speed
                     # raise ISO
                     return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
                 else:
                     pass # faster shutter speed underexposed
-            else: # target has faster shutter speed
+            else: # current faster shutter speed than target
                 if no_stop_diff < 0:
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff} # rec ND Filter
                 else: # slower shutter speed, overexposed
@@ -162,9 +162,13 @@ class Recommender:
             if flags[1] == 1: # target scene more light
                 if no_stop_diff > 0: # use ND filter
                     return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
+                else:
+                    pass
             else: # target less light
                 if no_stop_diff < 0:
                     return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
+                else:
+                    pass
         if flags[2] != 0: 
             # iso changed
             if flags[2] == 1: # target higher iso
