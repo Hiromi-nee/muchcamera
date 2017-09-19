@@ -400,7 +400,30 @@ class RecSettingsWImage(Resource):
 
 class RecFilter(Resource):
     def get(self):
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument('ff_fl', help="Full Frame Focal Length")
+        parser.add_argument('orig_fl', help="Original Focal Length")
+        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('sensor_size', help="sensor size")
+        parser.add_argument('max_aperture', help="max_aperture")
+        parser.add_argument('min_aperture', help="min_aperture")
+        parser.add_argument('max_shutter_speed', help="max_shutter_speed")
+        parser.add_argument('min_shutter_speed', help="min_shutter_speed")
+        parser.add_argument('max_iso', type=int, help="max_iso")
+        parser.add_argument('min_iso', type=int, help="min_iso")
+        parser.add_argument('max_fl', type=int, help="max focal length")
+        parser.add_argument('min_fl', type=int, help="minimum focal length")
+        parser.add_argument('multiplier', help="crop factor")
+        args = parser.parse_args()
+        camera = Camera(
+            args['ff_fl'], args['orig_fl'],
+            args['model'], args['sensor_size'],
+            float(args['max_aperture']), float(args['min_aperture']),
+            float(args['max_shutter_speed']), eval(args['min_shutter_speed']),
+            args['max_iso'], args['min_iso'],
+            args['max_fl'], args['min_fl'],
+            float(args['multiplier'])
+        )
 
 # END RECOMMENDER
 
