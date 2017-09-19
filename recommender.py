@@ -161,14 +161,14 @@ class Recommender:
             # if larger num -> use ND Filter
             if flags[1] == 1: # current smaller aperture than target
                 if no_stop_diff > 0: # current scene brighter than target scene
-                    return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
+                    return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
                 else: # target scene brighter than current scene
-                    pass
+                    return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
             else: # target smaller aperture than current
                 if no_stop_diff < 0: # target scene brighter than current scene
-                    return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
+                    return {"Action" : "ND Filter", "Value (stops)" : no_stop_diff}
                 else: # current scene brighter than target scene
-                    pass
+                    return {"Action" : "Raise ISO", "Value (stops)" : no_stop_diff}
         if flags[2] != 0: 
             # iso changed
             if flags[2] == 1: # target higher iso
