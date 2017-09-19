@@ -401,6 +401,13 @@ class RecSettingsWImage(Resource):
 class RecFilter(Resource):
     def get(self):
         parser = reqparse.RequestParser()
+        # ID of current exposure
+        parser.add_argument('exposure_id', type=int, help="exp_id")
+        # Target exposure values
+        parser.add_argument('tExposureTime', help="Shutter Speed Value.")
+        parser.add_argument('tAperture', help="Aperture Value.")
+        parser.add_argument('tISO', help="ISO Value.")
+
         parser.add_argument('ff_fl', help="Full Frame Focal Length")
         parser.add_argument('orig_fl', help="Original Focal Length")
         parser.add_argument('model', type=int, help="camera model")
@@ -415,6 +422,18 @@ class RecFilter(Resource):
         parser.add_argument('min_fl', type=int, help="minimum focal length")
         parser.add_argument('multiplier', help="crop factor")
         args = parser.parse_args()
+        cur_exp_obj = exposures[args['exposure_id']]
+        current_exp = [
+            str(cur_exp_obj.exp_time),
+            cur_exp_obj.iso,
+            cur_exp_obj.f_no
+        ]
+        target_exp = [
+            args['tExposureTime'], 
+            args['tISO'],
+            args['tAperture']
+            ]
+
         camera = Camera(
             args['ff_fl'], args['orig_fl'],
             args['model'], args['sensor_size'],
@@ -424,6 +443,10 @@ class RecFilter(Resource):
             args['max_fl'], args['min_fl'],
             float(args['multiplier'])
         )
+
+        rec_res = Recommender().recommend_filter(camera, current_exp, target_exp)
+
+        return jsonify(rec_res)
 
 # END RECOMMENDER
 
