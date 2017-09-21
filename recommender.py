@@ -122,7 +122,7 @@ class Recommender:
                 break
             if float(setting[1]) > camera.max_aperture or float(setting[1]) < camera.min_aperture:
                 break
-            #if setting[2] > camera.max_fl or setting[2] < camera.min_fl:
+            #if float(setting[2]) > camera.max_fl or float(setting[2]) < camera.min_fl:
             #    break
             if int(setting[3]) > camera.max_iso or int(setting[3]) < camera.min_iso:
                 break

@@ -268,7 +268,7 @@ class UploadImage(Resource):
         extension = os.path.splitext(file.filename)[1]
         f_name = str(uuid.uuid4()) + extension
         file.save(os.path.join(UPLOAD_FOLDER, f_name))
-        image_paths.append(f_name)
+        image_paths.append(UPLOAD_FOLDER+f_name)
 
         return jsonify({'image_id':(len(image_paths)-1)})
 
@@ -318,7 +318,7 @@ class RecSettingsWOImage(Resource):
         # camera args
         parser.add_argument('ff_fl', help="Full Frame Focal Length")
         parser.add_argument('orig_fl', help="Original Focal Length")
-        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('model', help="camera model")
         parser.add_argument('sensor_size', help="sensor size")
         parser.add_argument('max_aperture', help="max_aperture")
         parser.add_argument('min_aperture', help="min_aperture")
@@ -362,7 +362,7 @@ class RecSettingsWImage(Resource):
         # camera args
         parser.add_argument('ff_fl', help="Full Frame Focal Length")
         parser.add_argument('orig_fl', help="Original Focal Length")
-        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('model', help="camera model")
         parser.add_argument('sensor_size', help="sensor size")
         parser.add_argument('max_aperture', help="max_aperture")
         parser.add_argument('min_aperture', help="min_aperture")
@@ -410,7 +410,7 @@ class RecFilter(Resource):
 
         parser.add_argument('ff_fl', help="Full Frame Focal Length")
         parser.add_argument('orig_fl', help="Original Focal Length")
-        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('model', help="camera model")
         parser.add_argument('sensor_size', help="sensor size")
         parser.add_argument('max_aperture', help="max_aperture")
         parser.add_argument('min_aperture', help="min_aperture")
