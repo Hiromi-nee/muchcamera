@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
+from flask_cors import CORS
 from json import dumps
 from flask.ext.jsonpify import jsonify
 from calc.ExpCalc import ExpCalc
@@ -10,6 +11,7 @@ import os, uuid
 from camera import Camera
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
 UPLOAD_FOLDER = "images/"
