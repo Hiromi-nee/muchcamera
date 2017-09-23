@@ -283,7 +283,7 @@ class Exif(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('image_id', type=int, help="Photo id")
         args = parser.parse_args()
-        exif = Recommender().extract_exif(UPLOAD_FOLDER+image_paths[args['image_id']])[0]
+        exif = Recommender().extract_exif(image_paths[args['image_id']])[0]
         # et, fno, fl ,iso, ev bias
         img_exif = {"ExposureTime": exif[0],
         "Aperture": exif[1],
