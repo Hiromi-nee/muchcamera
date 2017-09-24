@@ -255,7 +255,7 @@ function exposure_value_byid(exp_id, display = false, display_element = null){
   });
 }
 
-function aperture(exp_id, aperture){
+function change_aperture(exp_id, aperture){
   prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/aperture',
@@ -275,7 +275,7 @@ function aperture(exp_id, aperture){
   });
 }
 
-function exposure_time(exp_id, exp_time){
+function change_exposure_time(exp_id, exp_time){
   prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/exposure_time',
@@ -295,7 +295,7 @@ function exposure_time(exp_id, exp_time){
   });
 }
 
-function iso(exp_id, iso, change){
+function change_iso(exp_id, iso, change){
   prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/iso',
@@ -472,7 +472,7 @@ $("#ExposureTime").change(function() {
         set_exposure(exp_time, $('#ISO').val(), $('#Aperture').val());
       }else{
         //shutter priority
-        exposure_time(exposure_id, exp_time);
+        change_exposure_time(exposure_id, exp_time);
       }
 
     }
@@ -494,7 +494,7 @@ $("#Aperture").change(function(){
         set_exposure($('#ExposureTime').val(), $('#ISO').val(), $('#Aperture').val());
       }else{
         // aperture
-        aperture(exposure_id, f_no);
+        change_aperture(exposure_id, f_no);
       }
     }
     console.log("Exp filled");
@@ -515,7 +515,7 @@ $('#ISO').change(function(){
         set_exposure($('#ExposureTime').val(), $('#ISO').val(), $('#Aperture').val());
       }else{
         // iso priority
-        iso(exposure_id, iso, "et");
+        change_iso(exposure_id, iso, "et");
       }
     }
     console.log("Exp filled");
