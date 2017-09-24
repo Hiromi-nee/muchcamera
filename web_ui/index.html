@@ -11,7 +11,7 @@
   <body>
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="#">Style Me, Up!</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -58,13 +58,24 @@
               <form id="dof_form">
                 <span>Subject Distance (m): </span>
                 <input type="text" class="form-control" id="subj_dist" placeholder="5">
+                <div id="dof_res">
+                  <br>
+                </div>
+                <button type="submit" class="btn btn-primary" id="dof_calc">Calc DOF</button>
               </form>
             </div>
           </div>
         </div>
         <div class="col">
           <div class="row">
-            <div class="col"><h4>Exif Data</h4><hr></div>
+            <div class="col"><h4>Exif Data</h4><hr>
+              <span>Exposure Time:</span><span id="exif_exp_time"></span><br>
+              <span>Aperture:</span><span id="exif_f_no"></span><br>
+              <span>FocalLength:</span><span id="exif_fl"></span><br>
+              <span>ISO:</span><span id="exif_iso"></span><br>
+              <span>ExposureCompensation:</span><span id="exif_exp_comp"></span><br>
+              <span>EV:</span><span id="exif_ev"></span><br><br>
+            </div>
           </div>
           <div class="row">
             <div class="col"> <h4>Exposure Settings</h4><hr>
@@ -85,10 +96,16 @@
         </div>
         <div class="col">
           <div class="row">
-            <div class="col"><h4>Styles</h4><hr></div>
+            <div class="col">
+              <h4>Styles</h4><hr>
+              <div id="style_prob_list"></div>
+            </div>
           </div>
           <div class="row">
-            <div class="col"><h4>Probability</h4><hr></div>
+            <div class="col">
+              <h4>Probability</h4><hr>
+              <div id="class_prob_list"></div>
+            </div>
           </div>
         </div>
       </div>

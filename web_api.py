@@ -309,8 +309,8 @@ class RecStyle(Resource):
         args = parser.parse_args()
         detected_styles, cnn_class_probs = Recommender().rec_style(image_paths[args['image_id']])
         res = {
-        "detected_styles": [{i[0] : i [1]}for i in detected_styles],
-        "class_probabilities": [{i[0] : i [1]}for i in cnn_class_probs]
+        "detected_styles": [{"Class":i[0], "Probability" : i [1]}for i in detected_styles],
+        "class_probabilities": [{"Class" : i[0], "Probability" : i [1]}for i in cnn_class_probs]
         }
         return jsonify(res)
 

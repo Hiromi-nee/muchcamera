@@ -15,6 +15,7 @@ var image_id = 0;
 var style = {};
 var dof = {};
 
+
 function recommend_style(image_id){
   var t0 = performance.now();
   $.ajax({
@@ -26,6 +27,9 @@ function recommend_style(image_id){
       console.log("Recommend Style execution " + (t1 - t0) + "ms.")
       console.log(data);
       style = data;
+
+      display_probabilities(style['class_probabilities']);
+      display_styles(style['detected_styles']);
     }
   });
 }
@@ -51,6 +55,12 @@ function calc_dof(f_no, fl, subj_dist){
     success: function(data){
       console.log(data);
       dof = data;
+
+      $("#dof_res").append("<span> Behind Subject : "+dof['behind_subj']+" m </span><br>");
+      $("#dof_res").append("<span> In front of Subject : "+dof['in_front_subj']+" m </span><br>");
+      $("#dof_res").append("<span> Far distance sharp : "+dof['far_dist_sharp']+" m </span><br>");
+      $("#dof_res").append("<span> Near distance sharp : "+dof['near_dist_sharp']+" m </span><br>");
+      $("#dof_res").append("<span> Hyperfocal distance : "+dof['hyperfocal_distance']+" m </span><br>");
     }
   });
 }
@@ -70,7 +80,7 @@ function calc_coc(ff_fl, fl){
 }
 
 //exif functions
-function get_exif(image_id){
+function get_exif(image_id, flag){
   //var t2 = performance.now();
   $.ajax({
     url: api_path + '/get_exif',
@@ -81,6 +91,7 @@ function get_exif(image_id){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exif = data;
+      display_exif(data);
     }
   });
 
@@ -140,7 +151,7 @@ function get_exposure(exp_id){
   });    
 }
 
-function calc_exposure_value(exposure_time, iso, aperture){
+function calc_exposure_value(exposure_time, iso, aperture, display=false, display_element = null){
   $.ajax({
     url: api_path + '/ev',
     type: 'GET',
@@ -153,7 +164,9 @@ function calc_exposure_value(exposure_time, iso, aperture){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data['EV'];
+      if(display){
+        $(display_element).html(" "+data['EV']);
+      }
     }
   });
 }
@@ -247,6 +260,32 @@ function get_camera(camera_id){
 
 }
 
+// DISPLAY STUFF
+function display_exif(exif){
+  $('#exif_exp_time').html(" "+exif['ExposureTime'] + " s");
+  $('#exif_f_no').html(" f/"+exif['Aperture']);
+  $('#exif_fl').html(" "+exif['FocalLength']+" mm");
+  $('#exif_iso').html(" "+exif['ISO']);
+  $('#exif_exp_comp').html(" "+exif['ExposureCompensation']);
+  ev = calc_exposure_value(exif['ExposureTime'], exif['ISO'], exif['Aperture'], true, '#exif_ev');
+  console.log(ev);
+  
+}
+
+function display_probabilities(probabilities){
+  $("#class_prob_list").html("");
+  $.each(probabilities, function(index, value){
+    $("#class_prob_list").append("<span>"+value["Class"]+" : "+value['Probability']+" </span><br>");
+  });
+}
+
+function display_styles(styles){
+  $("#style_prob_list").html("");
+  $.each(styles, function(index, value){
+    $("#style_prob_list").append("<span>"+value["Class"]+" : "+value['Probability']+" </span><br>");
+  });
+}
+
 //wIP
 
 $(function () {
@@ -257,7 +296,7 @@ $(function () {
             console.log("Get style.")
             image_id = data['result']['image_id']
             recommend_style(image_id);
-            get_exif(image_id);
+            get_exif(image_id, true);
 
             // DISPLAY EXIF
         },
