@@ -270,6 +270,7 @@ function aperture(exp_id, aperture){
       console.log(data);
       cur_exposure = data; //returns exposure settings
       exposure_value_byid(exp_id, true, "#exposure_val");
+      display_exp_settings(cur_exposure);
     }
   });
 }
@@ -289,6 +290,7 @@ function exposure_time(exp_id, exp_time){
       console.log(data);
       cur_exposure = data; //returns exposure settings
       exposure_value_byid(exp_id, true, "#exposure_val");
+      display_exp_settings(cur_exposure);
     }
   });
 }
@@ -309,6 +311,7 @@ function iso(exp_id, iso, change){
       console.log(data);
       cur_exposure = data; //returns exposure settings
       exposure_value_byid(exp_id, true, "#exposure_val");
+      display_exp_settings(cur_exposure);
     }
   });
 }
