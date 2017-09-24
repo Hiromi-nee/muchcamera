@@ -15,6 +15,9 @@ var image_id = 0;
 var style = {};
 var dof = {};
 
+var rec_settings = null;
+var rec_filter = null;
+
 
 function recommend_style(image_id){
   var t0 = performance.now();
@@ -35,11 +38,64 @@ function recommend_style(image_id){
 }
 
 //recommend functions
-function rec_settings_wo_image(){}
+function rec_settings_wo_image(style, target_ev){
+  var t0 = performance.now();
+  payload = camera;
+  payload["style"] = style;
+  payload["target_ev"] = target_ev;
+  $.ajax({
+    url: api_path + '/recommend_settings_wo_image',
+    type: 'GET',
+    data: payload,
+    success: function(data){
+      var t1 = performance.now();
+      console.log("Recommend settings wo image execution " + (t1 - t0) + "ms.")
+      console.log(data);
+      rec_settings = data;
 
-function rec_settings_w_image(style, image_id){}
+    }
+  }); 
+}
 
-function recommend_filter(){}
+function rec_settings_w_image(style, image_id){
+  var t0 = performance.now();
+  payload = camera;
+  payload["style"] = style;
+  payload["image_id"] = image_id;
+  $.ajax({
+    url: api_path + '/recommend_settings_w_image',
+    type: 'GET',
+    data: payload,
+    success: function(data){
+      var t1 = performance.now();
+      console.log("Recommend settings w image execution " + (t1 - t0) + "ms.")
+      console.log(data);
+      rec_settings = data;
+
+    }
+  }); 
+}
+
+function recommend_filter(exposure_id, tExposureTime, tAperture, tISO){
+  var t0 = performance.now();
+  payload = camera;
+  payload["exposure_id"] = exposure_id;
+  payload["tExposureTime"] = tExposureTime;
+  payload["tAperture"] = tAperture;
+  payload["tISO"] = tISO;
+  $.ajax({
+    url: api_path + '/recommend_filter',
+    type: 'GET',
+    data: payload,
+    success: function(data){
+      var t1 = performance.now();
+      console.log("Recommend filter execution " + (t1 - t0) + "ms.")
+      console.log(data);
+      rec_filter = data;
+
+    }
+  }); 
+}
 
 // dof calc functions
 function calc_dof(f_no, fl, subj_dist){
@@ -95,8 +151,6 @@ function get_exif(image_id, flag){
         display_exif(data);
 
       }
-      
-
     }
   });
 
@@ -119,6 +173,7 @@ function set_manual_exposure(exp_id, exposure_time, iso, aperture){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exp_val = data['EV'];
+      $('#exposure_val').html(" "+data['EV']);
       if(exposure_id == -1){
         exposure_id = data['exposure_id'];
       }
@@ -139,8 +194,10 @@ function set_exposure(exposure_time, iso, aperture){
     success: function(data){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
+      
       console.log(data);
       exposure_id = data['exposure_id'];
+      exposure_value_byid(exposure_id, true, "#exposure_val");
     }
   });   
 }
@@ -182,7 +239,7 @@ function calc_exposure_value(exposure_time, iso, aperture, display=false, displa
   });
 }
 
-function exposure_value_byid(exp_id){
+function exposure_value_byid(exp_id, display = false, display_element = null){
   $.ajax({
     url: api_path + '/ev_by_id',
     type: 'GET',
@@ -191,7 +248,9 @@ function exposure_value_byid(exp_id){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data['EV'];
+      if(display){
+        $(display_element).html(" "+data['EV']);
+      }
     }
   });
 }
@@ -210,6 +269,7 @@ function aperture(exp_id, aperture){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exposure = data; //returns exposure settings
+      exposure_value_byid(exp_id, true, "#exposure_val");
     }
   });
 }
@@ -228,6 +288,7 @@ function exposure_time(exp_id, exp_time){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exposure = data; //returns exposure settings
+      exposure_value_byid(exp_id, true, "#exposure_val");
     }
   });
 }
@@ -247,6 +308,7 @@ function iso(exp_id, iso, change){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exposure = data; //returns exposure settings
+      exposure_value_byid(exp_id, true, "#exposure_val");
     }
   });
 }
@@ -298,6 +360,12 @@ function display_styles(styles){
   $.each(styles, function(index, value){
     $("#style_prob_list").append("<span>"+value["Class"]+" : "+value['Probability']+" </span><br>");
   });
+}
+
+function display_exp_settings(exp_s){
+  $('#ExposureTime').val(exp_s['ExposureTime']);
+  $('#ISO').val(exp_s['ISO']);
+  $('#Aperture').val(exp_s['Aperture']);
 }
 
 //wIP
@@ -397,6 +465,12 @@ $("#ExposureTime").change(function() {
       // just updated value.
       set_manual_exposure(exposure_id, exp_time, $('#ISO').val(), $('#Aperture').val());
     }else{
+      if(exposure_id == -1){
+        set_exposure(exp_time, $('#ISO').val(), $('#Aperture').val());
+      }else{
+        //shutter priority
+        exposure_time(exposure_id, exp_time);
+      }
 
     }
     console.log("Exp filled");
@@ -413,7 +487,12 @@ $("#Aperture").change(function(){
       // just updated value.
       set_manual_exposure(exposure_id, $('#ExposureTime').val(), $('#ISO').val(), f_no);
     }else{
-
+      if(exposure_id == -1){
+        set_exposure($('#ExposureTime').val(), $('#ISO').val(), $('#Aperture').val());
+      }else{
+        // aperture
+        aperture(exposure_id, f_no);
+      }
     }
     console.log("Exp filled");
   }else{
@@ -429,7 +508,12 @@ $('#ISO').change(function(){
       // just updated value.
       set_manual_exposure(exposure_id, $('#ExposureTime').val(), iso, $('#Aperture').val());
     }else{
-
+      if(exposure_id == -1){
+        set_exposure($('#ExposureTime').val(), $('#ISO').val(), $('#Aperture').val());
+      }else{
+        // iso priority
+        iso(exposure_id, iso, "et");
+      }
     }
     console.log("Exp filled");
   }else{
@@ -447,10 +531,10 @@ $('#exp_clear').click(function(){
 $('#manual_mode').change(function(){
   if(this.checked){
     manual_mode = true;
-    $('#exposure_val').html("lol");
+    //$('#exposure_val').html("lol");
   }else{
     manual_mode = false;
-    $('#exposure_val').html("no");
+    //$('#exposure_val').html("no");
   }
 
 });
