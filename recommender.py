@@ -24,11 +24,14 @@ class Recommender:
         #["1/250",5.6,200,"800","0"]
         exif = ["",0,0,"",""]
         img = PIL.Image.open(image_file_path)
-        exif_dict = {
-            PIL.ExifTags.TAGS[k]: v
-            for k, v in img._getexif().items()
-            if k in PIL.ExifTags.TAGS
-        }
+        try:
+            exif_dict = {
+                PIL.ExifTags.TAGS[k]: v
+                for k, v in img._getexif().items()
+                if k in PIL.ExifTags.TAGS
+            }
+        except Exception:
+            return []
         try:
             exif[0] = str(exif_dict['ExposureTime'][0]) + "/" + str(exif_dict['ExposureTime'][1])
             exif[1] = exif_dict['FNumber'][0]/exif_dict['FNumber'][1]
@@ -36,7 +39,7 @@ class Recommender:
             exif[3] = str(exif_dict['ISOSpeedRatings'])
             exif[4] = str(exif_dict['ExposureBiasValue'][0]/exif_dict['ExposureBiasValue'][1])
         except Exception:
-            return [-1] # no exif
+            return [] # no exif
         return [exif]
 
     def rec_style(self, image_file_path):

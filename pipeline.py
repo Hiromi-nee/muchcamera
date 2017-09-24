@@ -38,11 +38,14 @@ class Pipeline:
                 #check rf
 
                 if len(exif_data) != 0:
+                    print(exif_data)
                     if self.rf_lut[i_class[0]]:
                         e_ret = self.use_exif(self.rf_lut[i_class[0]],exif_data)
                         if eval(e_ret).decode("utf-8") != i_class[0]:
                             break
                 available_styles.extend([i_class])
+        if len(available_styles) == 0:
+            available_styles.extend([s[0]])
         return available_styles, s
 
         #find most probable class

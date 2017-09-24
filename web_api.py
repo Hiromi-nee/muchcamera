@@ -203,7 +203,7 @@ class IsoPriority(Resource):
 
 
 class ManualExposure(Resource):
-    def post(self):
+    def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument('exposure_id', type=int, help="exp_id")
         parser.add_argument('ExposureTime', help="Shutter Speed Value.")
@@ -283,7 +283,10 @@ class Exif(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('image_id', type=int, help="Photo id")
         args = parser.parse_args()
-        exif = Recommender().extract_exif(image_paths[args['image_id']])[0]
+        try:
+            exif = Recommender().extract_exif(image_paths[args['image_id']])[0]
+        except Exception:
+            exif = [0,0,0,0,0]
         # et, fno, fl ,iso, ev bias
         img_exif = {"ExposureTime": exif[0],
         "Aperture": exif[1],
@@ -460,7 +463,7 @@ class CameraConfig(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('ff_fl', help="Full Frame Focal Length")
         parser.add_argument('orig_fl', help="Original Focal Length")
-        parser.add_argument('model', type=int, help="camera model")
+        parser.add_argument('model', help="camera model")
         parser.add_argument('sensor_size', help="sensor size")
         parser.add_argument('max_aperture', help="max_aperture")
         parser.add_argument('min_aperture', help="min_aperture")
@@ -491,7 +494,21 @@ class CameraConfig(Resource):
         parser.add_argument('camera_id', type=int, help="camera_id")
         args = parser.parse_args()
         camera = cameras[args['camera_id']]
-        res = {}
+        res = {
+            'ff_fl': camera.ff_focal_length,
+            'orig_fl': camera.orig_focal_length,
+            'model': camera.model,
+            'sensor_size': camera.sensor_size,
+            'max_aperture': camera.max_aperture,
+            'min_aperture': camera.min_aperture,
+            'max_shutter_speed': camera.max_shutter_speed,
+            'min_shutter_speed': camera.min_shutter_speed,
+            'max_iso': camera.max_iso,
+            'min_iso': camera.min_iso,
+            'max_fl': camera.max_fl,
+            'min_fl': camera.min_fl,
+            'multiplier': camera.multiplier
+        }
 
         return jsonify(res)
 

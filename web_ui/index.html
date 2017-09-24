@@ -18,6 +18,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="camera.html">Set Camera</a>
           <a class="nav-item nav-link" href="style.html">Style</a>
           <a class="nav-item nav-link" href="image.html">Image</a>
           <a class="nav-item nav-link" href="no_image.html">No Image</a>
@@ -27,7 +28,7 @@
 
     <div class="container">
       <div class="row">
-        <div class="col"> </div>
+        <div class="col"><br> </div>
       </div> 
       <div class="row">
         <div class="col-6">
@@ -35,7 +36,7 @@
             <div class="col">
               <span class="btn btn-success fileinput-button">
                 <i class="glyphicon glyphicon-plus"></i>
-                <span>Select files...</span>
+                <span></span>
         <!-- The file input field used as target for the file upload widget -->
                 <input id="fileupload" type="file" name="file" data-url="http://127.0.0.1:5002/upload_image">
               </span>
@@ -52,31 +53,49 @@
           </div>
           <div class="row">
             <div class="col">
-              DOF DATA
+              <br>
+              <h4>DOF DATA</h4><hr>
+              <form id="dof_form">
+                <span>Subject Distance (m): </span>
+                <input type="text" class="form-control" id="subj_dist" placeholder="5">
+              </form>
             </div>
           </div>
         </div>
         <div class="col">
           <div class="row">
-            <div class="col rounded border border-dark">Exif Data</div>
+            <div class="col"><h4>Exif Data</h4><hr></div>
           </div>
           <div class="row">
-            <div class="col rounded border border-dark">/Exposure Settings</div>
+            <div class="col"> <h4>Exposure Settings</h4><hr>
+              <span>EV: </span><span id="exposure_val">Nil</span>
+              <form id="exp_settings">
+                <span>Exposure Time/Shutter Speed: </span>
+                <input type="text" class="form-control" id="ExposureTime" placeholder="1/4000">
+                <span>Aperture: </span>
+                <input type="text" class="form-control" id="Aperture" placeholder="2.8">
+                <span>ISO: </span>
+                <input type="text" class="form-control" id="ISO" placeholder="200">
+                 <span>Manual Mode</span>   &nbsp;&nbsp;&nbsp;  <input class="form-check-input" type="checkbox" id="manual_mode">
+                 <br>
+                <button type="reset" class="btn btn-primary" id="exp_clear">Clear</button>
+              </form>
+            </div>
           </div>
         </div>
         <div class="col">
           <div class="row">
-            <div class="col rounded border border-dark">Styles</div>
+            <div class="col"><h4>Styles</h4><hr></div>
           </div>
           <div class="row">
-            <div class="col rounded border border-dark">and Probability</div>
+            <div class="col"><h4>Probability</h4><hr></div>
           </div>
         </div>
       </div>
 
       <div class="row">
-        <div class="col">
-          Recommendations/Messages
+        <div class="col"><hr>
+          <h4>Recommendations/Messages</h4>
           <div class="alert alert-warning" role="alert">
             This is a warning alert—check it out!
           </div>
@@ -97,62 +116,6 @@
     <script src="js/jquery.iframe-transport.js"></script>
     <script src="js/jquery.fileupload.js"></script>
     <script src="js/recommend.js"></script>
-    <!--<script>
-      var api_path = 'http://127.0.0.1:5002'
-      function get_style(image_id){
 
-        $.ajax({
-          url: api_path + '/recommend_style',
-          type: 'GET',
-          data: "image_id="+image_id,
-          success: function(data){
-            console.log(data);
-          }
-        });
-      }
-
-function get_exif(image_id){
-  $.ajax({
-    url: api_path + '/get_exif',
-    type: 'GET',
-    data: "image_id="+image_id,
-    success: function(data){
-      console.log(data);
-    }
-  });
-
-}
-
-$(function () {
-    $('#fileupload').fileupload({
-        dataType: 'json',
-        done: function (e, data) {
-            console.log(data['result']['image_id']);
-            get_exif(data['result']['image_id']);
-            console.log("Get style.")
-            get_style(data['result']['image_id']);
-
-        },
-
-        progressall: function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress .bar').css(
-            'width',
-            progress + '%'
-        );
-      }
-    });
-});
-
-$.ajax({
-  url: api_path + '/calc_dof',
-  type: 'GET',
-  data: "Aperture=2&FocalLength=50&coc=0.030&SubjDist=5",
-  success: function(data) {
-    console.log(data);
-  }
-});
-
-  </script>-->
   </body>
 </html>

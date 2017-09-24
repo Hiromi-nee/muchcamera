@@ -41,6 +41,9 @@ curl -XGET "http://127.0.0.1:5002/recommend_filter?exposure_id=0&tExposureTime=1
 # PUT camera config
 curl -XPUT "http://127.0.0.1:5002/camera_config?ff_fl=35&orig_fl=23&model=x100s&sensor_size=APSC&max_aperture=16&min_aperture=2&max_shutter_speed=30&min_shutter_speed=1%2F4000&max_iso=6400&min_iso=100&max_fl=35&min_fl=35&multiplier=1.5"
 
+# GET CAMERA CONFIG
+curl -XGET "http://127.0.0.1:5002/camera_configcamera_id=1"
+
 # Setting/Retrieving exposure
 curl -XPUT "http://127.0.0.1:5002/exposure?ExposureTime=1%2F8000&ISO=100&Aperture=3.5"
 curl -XGET "http://127.0.0.1:5002/exposure?exposure_id=1"
