@@ -21,4 +21,4 @@ class DofCalc:
         behind_subj = (far_dist_sharp - f_distance*1000)/1000
         #print("In front of subject in focus (m):", in_front_subj)
         #print("Behind of subject in focus (m):",behind_subj)
-        return hyperfocal_dist/1000, near_dist_sharp/1000, far_dist_sharp/1000, in_front_subj, behind_subj
+        return hyperfocal_dist/1000, near_dist_sharp/1000, (far_dist_sharp/1000)*-1, in_front_subj, behind_subj*-1

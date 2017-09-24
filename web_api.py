@@ -210,14 +210,26 @@ class ManualExposure(Resource):
         parser.add_argument('Aperture', help="Aperture Value.")
         parser.add_argument('ISO', help="ISO Value.")
         args = parser.parse_args()
-        exp_id = args['exposure_id']
-        exp_obj = exposures[exp_id]
-        exp_obj.exp_time = eval(args['ExposureTime'])
-        exp_obj.f_no = float(args['Aperture'])
-        exp_obj.iso = int(args['ISO'])
-        exposures[exp_id] = exp_obj
+        
+        try:
+            exp_id = args['exposure_id']
+            exp_obj = exposures[exp_id]
+            exp_obj.exp_time = eval(args['ExposureTime'])
+            exp_obj.f_no = float(args['Aperture'])
+            exp_obj.iso = int(args['ISO'])
+            exposures[exp_id] = exp_obj
+        except IndexError:
+            print("Doesnt exist")
+            exp_obj = ExpCalc(eval(str(args['ExposureTime'])), int(args['ISO']), float(args['Aperture']))
+            exposures.append(exp_obj)
+            exp_id = str(len(exposures)-1)
+
+        
         ev = exp_obj.get_exposure_val()
-        res = {"EV": round(ev,0)}
+        res = {
+            "EV": round(ev,0),
+            "exposure_id": exp_id
+        }
 
         return jsonify(res)
 

@@ -55,7 +55,7 @@ function calc_dof(f_no, fl, subj_dist){
     success: function(data){
       console.log(data);
       dof = data;
-
+      $("#dof_res").html("");
       $("#dof_res").append("<span> Behind Subject : "+dof['behind_subj']+" m </span><br>");
       $("#dof_res").append("<span> In front of Subject : "+dof['in_front_subj']+" m </span><br>");
       $("#dof_res").append("<span> Far distance sharp : "+dof['far_dist_sharp']+" m </span><br>");
@@ -91,7 +91,12 @@ function get_exif(image_id, flag){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exif = data;
-      display_exif(data);
+      if(flag){
+        display_exif(data);
+
+      }
+      
+
     }
   });
 
@@ -99,6 +104,7 @@ function get_exif(image_id, flag){
 
 // exposure functions
 function set_manual_exposure(exp_id, exposure_time, iso, aperture){
+  prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/manual_exposure',
     type: 'PUT',
@@ -112,12 +118,16 @@ function set_manual_exposure(exp_id, exposure_time, iso, aperture){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data['EV'];
+      cur_exp_val = data['EV'];
+      if(exposure_id == -1){
+        exposure_id = data['exposure_id'];
+      }
     }
   });  
 }
 
 function set_exposure(exposure_time, iso, aperture){
+  prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/exposure',
     type: 'PUT',
@@ -130,12 +140,13 @@ function set_exposure(exposure_time, iso, aperture){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data['exposure_id'];
+      exposure_id = data['exposure_id'];
     }
   });   
 }
 
 function get_exposure(exp_id){
+  prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/exposure',
     type: 'GET',
@@ -146,7 +157,7 @@ function get_exposure(exp_id){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data;
+      cur_exposure = data;
     }
   });    
 }
@@ -186,6 +197,7 @@ function exposure_value_byid(exp_id){
 }
 
 function aperture(exp_id, aperture){
+  prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/aperture',
     type: 'POST',
@@ -197,12 +209,13 @@ function aperture(exp_id, aperture){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data; //returns exposure settings
+      cur_exposure = data; //returns exposure settings
     }
   });
 }
 
 function exposure_time(exp_id, exp_time){
+  prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/exposure_time',
     type: 'POST',
@@ -214,12 +227,13 @@ function exposure_time(exp_id, exp_time){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data; //returns exposure settings
+      cur_exposure = data; //returns exposure settings
     }
   });
 }
 
 function iso(exp_id, iso, change){
+  prev_exposure = cur_exposure;
   $.ajax({
     url: api_path + '/iso',
     type: 'POST',
@@ -232,7 +246,7 @@ function iso(exp_id, iso, change){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data; //returns exposure settings
+      cur_exposure = data; //returns exposure settings
     }
   });
 }
@@ -347,6 +361,21 @@ ff_fl="50", orig_fl = "50", model="Nikon D750", sensor_size="FF",
 
 });
 
+
+// DOF BUTTON
+
+$('#dof_form').submit(function (event){
+  event.preventDefault();
+  form_status = check_form_filled("#dof_form");
+  if(form_status){
+    calc_dof(cur_exif['Aperture'],cur_exif['FocalLength'], $("#subj_dist").val());
+    $('#dof_sub_status').html('<br><span class="badge badge-pill badge-success">DOF CALC-ED.</span>');
+  }else{
+    $('#dof_sub_status').html('<br><span class="badge badge-pill badge-danger">Form not complete.</span>');
+  }
+  
+});
+
 // check all exposure values set
 
 function check_form_filled(elem){
@@ -366,6 +395,9 @@ $("#ExposureTime").change(function() {
   if(check_form_filled('#exp_settings')){
     if(manual_mode){
       // just updated value.
+      set_manual_exposure(exposure_id, exp_time, $('#ISO').val(), $('#Aperture').val());
+    }else{
+
     }
     console.log("Exp filled");
   }else{
@@ -379,6 +411,9 @@ $("#Aperture").change(function(){
   if(check_form_filled('#exp_settings')){
     if(manual_mode){
       // just updated value.
+      set_manual_exposure(exposure_id, $('#ExposureTime').val(), $('#ISO').val(), f_no);
+    }else{
+
     }
     console.log("Exp filled");
   }else{
@@ -392,6 +427,9 @@ $('#ISO').change(function(){
   if(check_form_filled('#exp_settings')){
     if(manual_mode){
       // just updated value.
+      set_manual_exposure(exposure_id, $('#ExposureTime').val(), iso, $('#Aperture').val());
+    }else{
+
     }
     console.log("Exp filled");
   }else{
@@ -409,10 +447,10 @@ $('#exp_clear').click(function(){
 $('#manual_mode').change(function(){
   if(this.checked){
     manual_mode = true;
-    $('#exposure_val').html("lol")
+    $('#exposure_val').html("lol");
   }else{
     manual_mode = false;
-    $('#exposure_val').html("no")
+    $('#exposure_val').html("no");
   }
 
 });

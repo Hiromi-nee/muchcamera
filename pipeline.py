@@ -31,6 +31,7 @@ class Pipeline:
 
         cnn_ret = self.use_cnn(image_file_path)
 
+
         #sorted class probabilities
         s = [(k, cnn_ret[k]) for k in sorted(cnn_ret, key=cnn_ret.get, reverse=True)]
         for i_class in s:
