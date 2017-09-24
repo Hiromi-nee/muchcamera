@@ -59,6 +59,10 @@ function rec_settings_wo_image(style, target_ev){
 
 function rec_settings_w_image(style, image_id){
   var t0 = performance.now();
+  if(camera == null){
+    return;
+    $('#rec_msg').val("Camera not set.")
+  }
   payload = camera;
   payload["style"] = style;
   payload["image_id"] = image_id;
@@ -529,6 +533,19 @@ $('#exp_clear').click(function(){
   $('#exp_settings input').each(function(){
     $(this).val("");
   });
+});
+
+$('#w_image').submit(function(){
+  event.preventDefault();
+  rec_settings_w_image(style, image_id);
+
+});
+
+$('#wo_image').submit(function(){
+  event.preventDefault();
+  rec_settings_wo_image(style, target_ev);
+  
+
 });
 
 $('#manual_mode').change(function(){
