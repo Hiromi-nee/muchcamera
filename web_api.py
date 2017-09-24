@@ -146,7 +146,7 @@ class ExposureTimePriority(Resource):
             args = parser.parse_args()
             exp_id = args['exposure_id']
             exp_obj = exposures[exp_id]
-            exp_time = float(args['ExposureTime'])
+            exp_time = eval(args['ExposureTime'])
             ev = exp_obj.set_exp_time(exp_time)
             res = {
             "EV": round(ev,0),
