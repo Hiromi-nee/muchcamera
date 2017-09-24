@@ -119,9 +119,9 @@ class AperturePriority(Resource):
             "Aperture": exp_obj.f_no
             }
 
-        except Exception:
+        except Exception as e:
             res = {"Error": "Exposure not found."}
-
+            print(e)
         return jsonify(res)
 
 
@@ -155,8 +155,9 @@ class ExposureTimePriority(Resource):
             "Aperture": exp_obj.f_no
             }
 
-        except Exception:
+        except Exception as e:
             res = {"Error": "Exposure not found."}
+            print(e)
 
         return jsonify(res)
 
