@@ -60,7 +60,6 @@ function rec_settings_wo_image(style, target_ev){
 function rec_settings_w_image(style, image_id){
   var t0 = performance.now();
   if(camera == null){
-    return;
     $('#rec_msg').val("Camera not set.")
   }
   payload = camera;
