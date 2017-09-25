@@ -540,8 +540,9 @@ $('#exp_clear').click(function(){
   });
 });
 
-$('#rec_submit').submit(function(event){
+$('#rec_form').submit(function(event){
   event.preventDefault();
+
   style = $("#w_image_style").val();
   if($('#rec_mode').val() == "with_image"){
     rec_settings_w_image(style, image_id);
