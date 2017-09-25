@@ -540,18 +540,21 @@ $('#exp_clear').click(function(){
   });
 });
 
-$('#w_image').submit(function(){
+$('#rec_submit').submit(function(){
   event.preventDefault();
-  rec_settings_w_image(style, image_id);
-
-});
-
-$('#wo_image').submit(function(){
-  event.preventDefault();
-  rec_settings_wo_image(style, target_ev);
+  style = $("#w_image_style").val();
+  if($('#rec_mode').val() == "with_image"){
+    rec_settings_w_image(style, image_id);
+  }else if($('#rec_mode').val() == "without_image"){
+    target_ev = $('#w_image_EV').val();
+    rec_settings_wo_image(style, target_ev);
+  }
   
 
+  
 });
+
+
 
 $('#manual_mode').change(function(){
   if(this.checked){
