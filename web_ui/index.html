@@ -116,9 +116,24 @@
       <div class="row">
         <div class="col">
           <form>
-            <button type="submit" class="btn btn-primary" id="w_image">Rec With Image</button>
+            <select class="form-control" id="w_image_style">
+              <option value="SM">Symmetry/Vanishing Point</option>
+              <option value="SD">Shallow DOF</option>
+              <option value="DT">Duotone</option>
+              <option value="HK">High Key</option>
+              <option value="MB">Motion Blur/Long Exposure</option>
+              <option value="LK">Low Key</option>
+            </select>
+          </form>
+          <form>
+            <button type="submit" class="btn btn-primary" id="w_image">Rec With Image</button><br>
             <button type="submit" class="btn btn-primary" id="wo_image">Rec Without Image</button>
           </form>
+        </div>
+        <div class="col">
+          <div class="alert alert-secondary" role="alert" id="rec_settings">
+            <!-- WIP -->
+          </div>
         </div>
         <div class="col">
           <hr>
