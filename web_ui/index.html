@@ -22,6 +22,7 @@
           <a class="nav-item nav-link" href="style.html">Style</a>
           <a class="nav-item nav-link" href="image.html">Image</a>
           <a class="nav-item nav-link" href="no_image.html">No Image</a>
+          <a class="nav-item nav-link" href="ev_guide.html">EV Guide</a>
         </div>
       </div>
     </nav>
@@ -125,6 +126,7 @@
               <option value="without_image">Without Image</option>
 
             </select>
+            <br>
             <h6>For use with "With Image"</h6>
             <select class="form-control" id="w_image_style">
               <option value="SM">Symmetry/Vanishing Point</option>
@@ -134,7 +136,30 @@
               <option value="MB">Motion Blur/Long Exposure</option>
               <option value="LK">Low Key</option>
             </select>
+            <h6>Target EV: </h6>
+            <select class="form-control" id="w_image_EV">
+              <option value="16">16</option>
+              <option value="15">15</option>
+              <option value="14">14</option>
+              <option value="13">13</option>
+              <option value="12">12</option>
+              <option value="11">11</option>
+              <option value="10">10</option>
+              <option value="9">9</option>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="0">0</option>
+              <option value="-1">-1</option>
+              <option value="-2">-2</option>
+              <option value="-3">-3</option>
 
+            </select>
             <!--target ev-->
 
             <button type="submit" class="btn btn-primary" id="rec_submit">Recommend me!</button>
