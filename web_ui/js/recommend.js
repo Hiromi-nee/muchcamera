@@ -540,7 +540,7 @@ $('#exp_clear').click(function(){
   });
 });
 
-$('#rec_submit').submit(function(){
+$('#rec_submit').submit(function(event){
   event.preventDefault();
   style = $("#w_image_style").val();
   if($('#rec_mode').val() == "with_image"){
