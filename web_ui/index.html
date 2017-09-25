@@ -162,7 +162,8 @@
             </select>
             <!--target ev-->
 
-            <button type="submit" class="btn btn-primary" id="rec_submit">Recommend me!</button>
+            <button type="submit" class="btn btn-primary" id="rec_submit">Recommend me!</button>  
+            <p>Notice: Set camera limits before using recommenders.</p>
           </form>
 
         </div>
@@ -174,6 +175,19 @@
           </div>
         </div>
         <div class="col">
+          <div>
+            <form id="rec_filter">
+              <h6>Target Exposure Settings:</h6>
+                <span>Exposure Time/Shutter Speed: </span>
+                <input type="text" class="form-control" id="tExposureTime" placeholder="1/4000">
+                <span>Aperture: </span>
+                <input type="text" class="form-control" id="tAperture" placeholder="2.8">
+                <span>ISO: </span>
+                <input type="text" class="form-control" id="tISO" placeholder="200">
+                <br>
+                <button type="submit" class="btn btn-primary" id="texp_submit">Filter me!</button><br>
+            </form>
+          </div>
           <hr>
           <h4>Recommendations/Messages</h4>
           <div class="alert alert-warning" role="alert" id="rec_msg">

@@ -555,6 +555,18 @@ $('#rec_form').submit(function(event){
   
 });
 
+$('#rec_filter').submit(function(event){
+  event.preventDefault();
+  form_status = check_form_filled("#rec_form"); // WIP
+  exp_id = exposure_id;
+  tExposureTime = $("#tExposureTime").val();
+  tAperture = $('#tAperture').val();
+  tISO = ; $("tISO").vail();
+  recommend_filter(exp_id, tExposureTime, tAperture, tISO);
+  
+
+  
+});
 
 
 $('#manual_mode').change(function(){
