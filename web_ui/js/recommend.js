@@ -358,7 +358,7 @@ function display_exif(exif){
     'Aperture': exif['Aperture']
   }
   display_exp_settings(exp_set);
-  
+  set_exposure(exif['ExposureTime'], exif['ISO'], exif['Aperture']);
 }
 
 function display_probabilities(probabilities){
