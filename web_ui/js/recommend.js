@@ -352,6 +352,12 @@ function display_exif(exif){
   $('#exif_exp_comp').html(" "+exif['ExposureCompensation']);
   ev = calc_exposure_value(exif['ExposureTime'], exif['ISO'], exif['Aperture'], true, '#exif_ev');
   console.log(ev);
+  exp_set = {
+    'ExposureTime': exif['ExposureTime'],
+    'ISO': exif['ISO'],
+    'Aperture': exif['Aperture']
+  }
+  display_exp_settings(exp_set);
   
 }
 

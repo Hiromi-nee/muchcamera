@@ -2,7 +2,7 @@ from classifiers.cnnwrap import CNNWrap
 from classifiers.exif_rf import ExifRF
 
 class Pipeline:
-    rf_lut = {'Symmetry':'SD',
+    rf_lut = {'Symmetry':False,
             'Shallow_DOF':'SD',
             'Duotones':False,
             'High_Key':'HK',

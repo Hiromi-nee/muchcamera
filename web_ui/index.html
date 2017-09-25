@@ -92,7 +92,7 @@
                 <button type="reset" class="btn btn-primary" id="exp_clear">Clear</button><br>
               </form>
               <form>
-                <span>Manual Mode</span>   &nbsp;&nbsp;&nbsp;  <input class="form-check-input" type="checkbox" id="manual_mode"><br>
+                <span>Manual Mode</span>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <input class="form-check-input" type="checkbox" id="manual_mode"><br>
               </form>
             </div>
           </div>
@@ -116,7 +116,16 @@
       <div class="row">
         <div class="col">
           <hr>
+          <h4>Recommend Me!</h4>
           <form>
+            
+
+            <select class="form-control" id="rec_mode">
+              <option value="with_image">With Image</option>
+              <option value="without_image">Without Image</option>
+
+            </select>
+            <h5>For use with "With Image"</h5>
             <select class="form-control" id="w_image_style">
               <option value="SM">Symmetry/Vanishing Point</option>
               <option value="SD">Shallow DOF</option>
@@ -124,12 +133,6 @@
               <option value="HK">High Key</option>
               <option value="MB">Motion Blur/Long Exposure</option>
               <option value="LK">Low Key</option>
-            </select>
-
-            <select class="form-control" id="rec_mode">
-              <option value="with_image">With Image</option>
-              <option value="without_image">Without Image</option>
-
             </select>
 
             <button type="submit" class="btn btn-primary" id="rec_submit">Recommend me!</button>
