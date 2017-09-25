@@ -380,6 +380,16 @@ function display_exp_settings(exp_s){
   $('#Aperture').val(exp_s['Aperture']);
 }
 
+function display_filter(rec_f){
+  $('#rec_msg').val("Apply "+rec_f['Action']+ " for stops "+rec_f['Value (stops)']+".")
+}
+
+function display_rec_settings(settings){
+  for(setting in settings){
+
+  }
+}
+
 //wIP
 
 $(function () {
