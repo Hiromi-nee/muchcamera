@@ -11,7 +11,7 @@ var target_exp_val = null;
 
 var camera_id = -1;
 var camera = null;
-var image_id = 0;
+var image_id = -1;
 var style = {};
 var dof = {};
 
@@ -84,24 +84,29 @@ function rec_settings_w_image(style, image_id){
 function recommend_filter(exposure_id, tExposureTime, tAperture, tISO){
   var t0 = performance.now();
   payload = camera;
-  payload["exposure_id"] = exposure_id;
-  payload["tExposureTime"] = tExposureTime;
-  payload["tAperture"] = tAperture;
-  payload["tISO"] = tISO;
-  console.log(payload);
-  $.ajax({
-    url: api_path + '/recommend_filter',
-    type: 'GET',
-    data: payload,
-    success: function(data){
-      var t1 = performance.now();
-      console.log("Recommend filter execution " + (t1 - t0) + "ms.")
-      console.log(data);
-      rec_filter = data;
-      display_filter(data);
+  if(payload == null){
+    $("#filter_rec_msg").html('<br><div class="alert alert-danger" role="alert">CAMERA LIMITS NOT SET</div>');
+  }else{
+    payload["exposure_id"] = exposure_id;
+    payload["tExposureTime"] = tExposureTime;
+    payload["tAperture"] = tAperture;
+    payload["tISO"] = tISO;
+    console.log(payload);
+    $.ajax({
+      url: api_path + '/recommend_filter',
+      type: 'GET',
+      data: payload,
+      success: function(data){
+        var t1 = performance.now();
+        console.log("Recommend filter execution " + (t1 - t0) + "ms.")
+        console.log(data);
+        rec_filter = data;
+        display_filter(data);
 
-    }
-  }); 
+      }
+    }); 
+  }
+
 }
 
 // dof calc functions
@@ -154,6 +159,11 @@ function get_exif(image_id, flag){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       cur_exif = data;
+      prev_exposure = cur_exposure;
+      cur_exposure['ExposureTime'] = data['ExposureTime'];
+      cur_exposure['ISO'] = data['ISO'];
+      cur_exposure['Aperture'] = data['Aperture'];
+      set_exposure(data['ExposureTime'], data['ISO'], data['Aperture']);
       if(flag){
         display_exif(data);
 
@@ -352,7 +362,7 @@ function get_camera(camera_id){
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
       camera = data;
-      return data['camera_id']; 
+      //return data['camera_id']; 
     }
   });  
 }
@@ -473,6 +483,21 @@ ff_fl="50", orig_fl = "50", model="Nikon D750", sensor_size="FF",
 
 });
 
+// GET CAMERA BY ID
+
+$('#get_cam').submit(function(event){
+  event.preventDefault();
+  form_status = check_form_filled('#get_cam');
+  console.log(form_status);
+  if(form_status){
+    get_camera($('#get_cam_id').val());
+    $('#get_camera_sub_status').html('<br><span class="badge badge-pill badge-success">Submission Complete.</span>');
+  }else{
+    $('#get_camera_sub_status').html('<br><span class="badge badge-pill badge-danger">Form not complete.</span>')
+  }
+
+}
+);
 
 // DOF BUTTON
 
@@ -553,6 +578,7 @@ $('#ISO').change(function(){
       set_manual_exposure(exposure_id, $('#ExposureTime').val(), iso, $('#Aperture').val());
     }else{
       if(exposure_id == -1){
+        console.log(exposure_id);
         set_exposure($('#ExposureTime').val(), $('#ISO').val(), $('#Aperture').val());
       }else{
         // iso priority
@@ -574,24 +600,39 @@ $('#exp_clear').click(function(){
 
 $('#rec_form').submit(function(event){
   event.preventDefault();
-  style = $("#w_image_style").val();
-  if($('#rec_mode').val() == "with_image"){
-    rec_settings_w_image(style, image_id);
-  }else if($('#rec_mode').val() == "without_image"){
-    target_ev = $('#w_image_EV').val();
-    rec_settings_wo_image(style, target_ev);
+  if(camera == null){
+    $('#rec_error_msg').html('<br><div class="alert alert-danger" role="alert">CAMERA LIMITS NOT SET</div>');
+  }else{
+    $('#rec_error_msg').html("");
+    style = $("#w_image_style").val();
+    if($('#rec_mode').val() == "with_image"){
+      if(image_id < 0){
+        $('#rec_error_msg').html('<br><div class="alert alert-danger" role="alert">IMAGE NOT UPLOADED</div>');
+      }else{
+        rec_settings_w_image(style, image_id);
+      }
+    }else if($('#rec_mode').val() == "without_image"){
+      target_ev = $('#w_image_EV').val();
+      rec_settings_wo_image(style, target_ev);
+    }
   }
+
   
 });
 
 $('#rec_filter').submit(function(event){
   event.preventDefault();
-  form_status = check_form_filled("#rec_form"); // WIP
-  exp_id = exposure_id;
-  tExposureTime = $("#tExposureTime").val();
-  tAperture = $('#tAperture').val();
-  tISO = $("#tISO").val();
-  recommend_filter(exp_id, tExposureTime, tAperture, tISO);
+  form_status = check_form_filled("#rec_filter"); // WIP
+  if(form_status){
+    exp_id = exposure_id;
+    tExposureTime = $("#tExposureTime").val();
+    tAperture = $('#tAperture').val();
+    tISO = $("#tISO").val();
+    recommend_filter(exp_id, tExposureTime, tAperture, tISO);
+  }else{
+    $("#filter_rec_msg").html('<br><div class="alert alert-danger" role="alert">Target Exposures not set</div>');
+  }
+
   
 });
 

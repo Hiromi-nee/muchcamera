@@ -405,10 +405,9 @@ class RecSettingsWImage(Resource):
             args['max_fl'], args['min_fl'],
             float(args['multiplier'])
         )
-
-        rec_res = Recommender().rec_settings_w_image(args['style'], camera, image_paths[args['image_id']])
-        print(rec_res)
+        
         try:
+            rec_res = Recommender().rec_settings_w_image(args['style'], camera, image_paths[args['image_id']])
             res = {
             "recommended_settings": [
                 {
