@@ -18,10 +18,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-          <a class="nav-item nav-link" href="camera.html">Set Camera</a>
           <a class="nav-item nav-link" href="style.html">Style</a>
-          <a class="nav-item nav-link" href="image.html">Image</a>
-          <a class="nav-item nav-link" href="no_image.html">No Image</a>
           <a class="nav-item nav-link" href="ev_guide.html">EV Guide</a>
         </div>
       </div>
@@ -163,9 +160,124 @@
             <!--target ev-->
 
             <button type="submit" class="btn btn-primary" id="rec_submit">Recommend me!</button>  
-            <p>Notice: Set camera limits before using recommenders.</p>
-          </form>
+            
 
+          </form>
+          <p>Notice: Set camera limits before using recommenders.</p>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Set Camera Limits
+          </button>
+
+<!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Set Camera Limits</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form class="container" id="camera_form"><div>
+                      <div class="row">
+                        <div class="col">Full Frame Focal Length (mm): </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="ff_fl" placeholder="35">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Original Focal Length: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="fl" placeholder="35">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Camera Model: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="model" placeholder="Nikon D750">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Sensor Size: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="sensor_size" placeholder="FF">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Max Aperture: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="max_aperture" placeholder="22">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Minimum Aperture: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="min_aperture" placeholder="2.8">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Max Shutter Speed: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="max_shutter_speed" placeholder="30">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Minimum Shutter Speed: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="min_shutter_speed" placeholder="1/4000">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Max ISO: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="max_iso" placeholder="6400">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Minimum ISO: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="min_iso" placeholder="200">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Max Focal Length: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="max_fl" placeholder="70">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Minimum Focal Length: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="min_fl" placeholder="24">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">Multiplier: </div>
+                        <div class = "col">
+                          <input type="text" class="form-control" id="multiplier" placeholder="1">
+                        </div>
+                      </div>
+                      <div class ="row">
+                        <div class="col-6" ></div>
+                        <div class="col"><br>
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                        <div class="col" id="camera_sub_status"><br>
+                          <!--<span class="badge badge-pill badge-success" id="camera_sub_status"></span>-->
+                        </div>
+                      </div>
+
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col">
           <hr>
@@ -177,7 +289,7 @@
         <div class="col">
           <div>
             <form id="rec_filter">
-              <h6>Target Exposure Settings:</h6>
+              <h5>Target Exposure Settings:</h5>
                 <span>Exposure Time/Shutter Speed: </span>
                 <input type="text" class="form-control" id="tExposureTime" placeholder="1/4000">
                 <span>Aperture: </span>

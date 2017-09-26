@@ -64,18 +64,18 @@ class Recommender:
             cur.execute("SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE EV=:ev",{"ev":str(int(target_ev))})
             results = cur.fetchall()
             if len(results) == 0:
-                return -1
+                return []
             else:
                 final_results = self.filter_for_camera_limits(camera, results)
                 return final_results
         else:
-            return -1
+            return []
         
 
     def rec_settings_w_image(self, style, camera, image_file_path):
         exif_data = self.extract_exif(image_file_path)[0]
         if len(exif_data) == 0:
-            return -1
+            return []
         else:
             stmt_base = "SELECT DISTINCT ExposureTime,FNumber,FocalLength,ISO FROM t WHERE "
             expo = ExpCalc(eval(exif_data[0]),int(exif_data[3]),float(exif_data[1]))
@@ -101,12 +101,12 @@ class Recommender:
                     results = cur.fetchall()
                     
                     if len(results) == 0:
-                        return -1
+                        return []
                     else:
                         final_results = self.filter_for_camera_limits(camera, results)
                         return final_results
             except Exception:
-                return -1
+                return []
             #search style db
             #find most similar exposure setting
             #calc EV, make same EV

@@ -41,6 +41,7 @@ function recommend_style(image_id){
 function rec_settings_wo_image(style, target_ev){
   var t0 = performance.now();
   payload = camera;
+  console.log(payload);
   payload["style"] = style;
   payload["target_ev"] = target_ev;
   $.ajax({
@@ -52,7 +53,7 @@ function rec_settings_wo_image(style, target_ev){
       console.log("Recommend settings wo image execution " + (t1 - t0) + "ms.")
       console.log(data);
       rec_settings = data;
-
+      display_rec_settings(data);
     }
   }); 
 }
@@ -74,6 +75,7 @@ function rec_settings_w_image(style, image_id){
       console.log("Recommend settings w image execution " + (t1 - t0) + "ms.")
       console.log(data);
       rec_settings = data;
+      display_rec_settings(data);
 
     }
   }); 
@@ -86,6 +88,7 @@ function recommend_filter(exposure_id, tExposureTime, tAperture, tISO){
   payload["tExposureTime"] = tExposureTime;
   payload["tAperture"] = tAperture;
   payload["tISO"] = tISO;
+  console.log(payload);
   $.ajax({
     url: api_path + '/recommend_filter',
     type: 'GET',
@@ -95,6 +98,7 @@ function recommend_filter(exposure_id, tExposureTime, tAperture, tISO){
       console.log("Recommend filter execution " + (t1 - t0) + "ms.")
       console.log(data);
       rec_filter = data;
+      display_filter(data);
 
     }
   }); 
@@ -325,7 +329,7 @@ max_aperture = 20, min_aperture = 2.8, max_shutter_speed = 30, min_shutter_speed
 max_iso = 6400, min_iso = 100, max_fl = 70, min_fl = 28, multiplier=1
 */
 function set_camera(camera){
-    $.ajax({
+  $.ajax({
     url: api_path + '/camera_config',
     type: 'PUT',
     data: camera,
@@ -333,13 +337,24 @@ function set_camera(camera){
       //var t3 = performance.now();
       //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
       console.log(data);
-      return data['camera_id']; //returns exposure settings
+      return data['camera_id']; 
     }
   });
 }
 
 function get_camera(camera_id){
-
+  $.ajax({
+    url: api_path + '/camera_config',
+    type: 'GET',
+    data: {'camera_id': camera_id},
+    success: function(data){
+      //var t3 = performance.now();
+      //console.log("Get EXIF execution " + (t3 - t2) + "ms.")
+      console.log(data);
+      camera = data;
+      return data['camera_id']; 
+    }
+  });  
 }
 
 // DISPLAY STUFF
@@ -381,12 +396,19 @@ function display_exp_settings(exp_s){
 }
 
 function display_filter(rec_f){
-  $('#rec_msg').val("Apply "+rec_f['Action']+ " for stops "+rec_f['Value (stops)']+".")
+  $('#rec_msg').html("Apply "+rec_f['Action']+ " for stops "+rec_f['Value (stops)']+".");
 }
 
 function display_rec_settings(settings){
-  for(setting in settings){
-
+  var temp = "";
+  $("#rec_settings").html("");
+  if(settings['recommended_settings'].length == 0){
+    $("#rec_settings").append("<span>No recommendations. Try another target EV.</span><br>");
+  }else{
+    for(i = 0; i< settings['recommended_settings'].length; i++){
+      console.log(JSON.stringify(settings['recommended_settings'][i]));
+      $("#rec_settings").append("<span>"+JSON.stringify(settings['recommended_settings'][i])+"</span><br>");
+    }
   }
 }
 
@@ -552,7 +574,6 @@ $('#exp_clear').click(function(){
 
 $('#rec_form').submit(function(event){
   event.preventDefault();
-
   style = $("#w_image_style").val();
   if($('#rec_mode').val() == "with_image"){
     rec_settings_w_image(style, image_id);
@@ -560,8 +581,6 @@ $('#rec_form').submit(function(event){
     target_ev = $('#w_image_EV').val();
     rec_settings_wo_image(style, target_ev);
   }
-  
-
   
 });
 
@@ -571,10 +590,8 @@ $('#rec_filter').submit(function(event){
   exp_id = exposure_id;
   tExposureTime = $("#tExposureTime").val();
   tAperture = $('#tAperture').val();
-  tISO = ; $("tISO").vail();
+  tISO = $("#tISO").val();
   recommend_filter(exp_id, tExposureTime, tAperture, tISO);
-  
-
   
 });
 

@@ -362,12 +362,15 @@ class RecSettingsWOImage(Resource):
             float(args['multiplier'])
         )
         rec_res = Recommender().rec_settings_wo_image(args['style'], camera, args['target_ev'])
-        res = {
-        "recommended_settings": [{ "ExposureTime": str(Fraction(float(i[0])).limit_denominator()), 
-                                "Aperture": i[1], 
-                                "FocalLength": i[2], 
-                                "ISO": i[3] } for i in rec_res]
-        }
+        try:
+            res = {
+            "recommended_settings": [{ "ExposureTime": str(Fraction(float(i[0])).limit_denominator()), 
+                                    "Aperture": i[1], 
+                                    "FocalLength": i[2], 
+                                    "ISO": i[3] } for i in rec_res]
+            }
+        except Exception:
+            res = {}
 
         return jsonify(res)
 
@@ -404,15 +407,19 @@ class RecSettingsWImage(Resource):
         )
 
         rec_res = Recommender().rec_settings_w_image(args['style'], camera, image_paths[args['image_id']])
-        res = {
-        "recommended_settings": [
-            {
-            "ExposureTime": str(Fraction(float(i[0])).limit_denominator()),
-            "Aperture": i[1],
-            "FocalLength": i[2],
-            "ISO": i[3]
-            } for i in rec_res]
-        }
+        print(rec_res)
+        try:
+            res = {
+            "recommended_settings": [
+                {
+                "ExposureTime": str(Fraction(float(i[0])).limit_denominator()),
+                "Aperture": i[1],
+                "FocalLength": i[2],
+                "ISO": i[3]
+                } for i in rec_res]
+            }
+        except IndexError:
+            res = {}
 
         return jsonify(res)
 
