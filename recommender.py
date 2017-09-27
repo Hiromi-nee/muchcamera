@@ -86,26 +86,27 @@ class Recommender:
                     conn = sqlite3.connect(self.exif_db_path + self.styles_db_path[style])
                     cur = conn.cursor()
                     if style == "SM":
-                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-2.5, "evhigh":expc+2.5})
                     elif style == "SD":
-                        cur.execute(stmt_base + "FNumber <= :f_no", {"f_no":"5.6"})
+                        cur.execute(stmt_base + "CAST(FNumber AS INTEGER) <= :f_no", {"f_no":6.3})
                     elif style == "DT":
-                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-3, "evhigh":expc+3})
                     elif style == "HK":
-                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-2, "evhigh":expc+3})
                     elif style == "MB":
-                        cur.execute(stmt_base + "ISO=:iso AND EV=:ev", {"iso":"","ev":""})
+                        cur.execute(stmt_base + "CAST(ISO AS INTEGER)<=:iso AND CAST(EV AS INTEGER)<=:ev", {"iso":int(exif_data[3]),"ev":8})
                     elif style == "LK":
-                        cur.execute(stmt_base + "EV >= :evlow AND EV <= :evhigh", {"evlow":str(expc-2), "evhigh":str(expc+2)})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-3, "evhigh":expc+2})
                     
                     results = cur.fetchall()
-                    
                     if len(results) == 0:
                         return []
                     else:
                         final_results = self.filter_for_camera_limits(camera, results)
+                        print(final_results)
                         return final_results
-            except Exception:
+            except Exception as e:
+                print(e)
                 return []
             #search style db
             #find most similar exposure setting
@@ -121,14 +122,18 @@ class Recommender:
         final_settings = []
         for setting in settings:
             #check exptime
-            if float(setting[0]) > camera.max_shutter_speed or float(setting[0]) < camera.min_shutter_speed:
-                break
-            if float(setting[1]) > camera.max_aperture or float(setting[1]) < camera.min_aperture:
-                break
-            #if float(setting[2]) > camera.max_fl or float(setting[2]) < camera.min_fl:
-            #    break
-            if int(setting[3]) > camera.max_iso or int(setting[3]) < camera.min_iso:
-                break
+            try:
+
+                if float(setting[0]) > camera.max_shutter_speed or float(setting[0]) < camera.min_shutter_speed:
+                    continue
+                if float(setting[1]) > camera.max_aperture or float(setting[1]) < camera.min_aperture:
+                    continue
+                if float(setting[2]) > camera.max_fl or float(setting[2]) < camera.min_fl:
+                    continue
+                if int(setting[3]) > camera.max_iso or int(setting[3]) < camera.min_iso:
+                    continue
+            except Exception:
+                continue
             final_settings.extend([setting])
         return final_settings
 
