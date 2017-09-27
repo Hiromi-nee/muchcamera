@@ -90,13 +90,13 @@ class Recommender:
                     elif style == "SD":
                         cur.execute(stmt_base + "CAST(FNumber AS INTEGER) <= :f_no", {"f_no":6.3})
                     elif style == "DT":
-                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-3, "evhigh":expc+3})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-2.5, "evhigh":expc+2.5})
                     elif style == "HK":
-                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-2, "evhigh":expc+3})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-2, "evhigh":expc+2.5})
                     elif style == "MB":
                         cur.execute(stmt_base + "CAST(ISO AS INTEGER)<=:iso AND CAST(EV AS INTEGER)<=:ev", {"iso":int(exif_data[3]),"ev":8})
                     elif style == "LK":
-                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-3, "evhigh":expc+2})
+                        cur.execute(stmt_base + "CAST(EV AS INTEGER) >= :evlow AND CAST(EV AS INTEGER) <= :evhigh", {"evlow":expc-2.5, "evhigh":expc+2})
                     
                     results = cur.fetchall()
                     if len(results) == 0:
