@@ -406,7 +406,7 @@ function display_exp_settings(exp_s){
 }
 
 function display_filter(rec_f){
-  $('#rec_msg').html('<div class="alert alert-warning" role="alert" id="rec_msg">Apply '+rec_f['Action']+ ' for stops '+rec_f['Value (stops)']+'.</div>');
+  $('#filter_rec_msg').html('<div class="alert alert-warning" role="alert" id="rec_msg">Apply '+rec_f['Action']+ ' for stops '+rec_f['Value (stops)']+'.</div>');
 }
 
 function display_rec_settings(settings){
