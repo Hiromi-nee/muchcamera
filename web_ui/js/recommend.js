@@ -395,7 +395,7 @@ function display_probabilities(probabilities){
 function display_styles(styles){
   $("#style_prob_list").html("");
   $.each(styles, function(index, value){
-    $("#style_prob_list").append("<span>"+value["Class"]+" : "+value['Probability']+" </span><br>");
+    $("#style_prob_list").append("<span>"+value["Class"]+"  </span><br>");
   });
 }
 
