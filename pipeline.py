@@ -35,7 +35,7 @@ class Pipeline:
         #sorted class probabilities
         s = [(k, cnn_ret[k]) for k in sorted(cnn_ret, key=cnn_ret.get, reverse=True)]
         for i_class in s:
-            if i_class[1] > 0.12:
+            if i_class[1] > 0.16:
                 #check rf 1 / len(s)
 
                 if len(exif_data) != 0:
